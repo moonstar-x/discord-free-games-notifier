@@ -2,8 +2,21 @@ const guildMock = {
   name: 'guild'
 };
 
+const commandMock = {
+  name: 'command',
+  description: 'description'
+};
+
+const commandGroupMock = {
+  name: 'group',
+  commands: [commandMock, commandMock]
+};
+
 const clientMock = {
-  handleCommandError: jest.fn()
+  handleCommandError: jest.fn(),
+  registry: {
+    groups: [commandGroupMock, commandGroupMock]
+  }
 };
 
 const userMock = {
@@ -18,7 +31,8 @@ const messageMock = {
   reply: jest.fn(),
   guild: guildMock,
   author: userMock,
-  member: memberMock
+  member: memberMock,
+  embed: jest.fn()
 };
 
 module.exports = {
@@ -26,5 +40,7 @@ module.exports = {
   clientMock,
   messageMock,
   userMock,
-  memberMock
+  memberMock,
+  commandGroupMock,
+  commandMock
 };
