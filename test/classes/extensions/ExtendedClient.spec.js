@@ -29,28 +29,6 @@ describe('Classes - Extensions - ExtendedClient', () => {
     expect(client).toBeInstanceOf(CommandoClient);
   });
 
-  describe('isDebugEnabled()', () => {
-    it('should return false if no --debug flag was used.', () => {
-      const oldArgs = [...process.argv];
-      process.argv = ['npm', 'start'];
-      const client = new ExtendedClient();
-  
-      expect(client.isDebugEnabled()).toBe(false);
-  
-      process.argv = oldArgs;
-    });
-
-    it('should return true if --debug flag was used.', () => {
-      const oldArgs = [...process.argv];
-      process.argv = ['npm', 'start', '--debug'];
-      const client = new ExtendedClient();
-  
-      expect(client.isDebugEnabled()).toBe(true);
-  
-      process.argv = oldArgs;
-    });
-  });
-
   describe('handleCommandError()', () => {
     it('should log the error and info.', () => {
       const expectedError = new Error();

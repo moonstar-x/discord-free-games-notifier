@@ -2,6 +2,7 @@ const path = require('path');
 const logger = require('@greencoast/logger');
 const ExtendedClient = require('./classes/extensions/ExtendedClient');
 const { discordToken, ownerID, prefix, inviteURL } = require('./common/settings');
+const { isDebugEnabled } = require('./common/context');
 const { connectDatabase } = require('./db');
 
 const client = new ExtendedClient({
@@ -19,7 +20,7 @@ client.registry
   ])
   .registerCommandsIn(path.join(__dirname, 'commands'));
 
-if (client.isDebugEnabled()) {
+if (isDebugEnabled) {
   client.on('debug', (info) => {
     logger.debug(info);
   });
