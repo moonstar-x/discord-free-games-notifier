@@ -105,3 +105,6 @@ dist
 
 # Config
 config/settings.json
+
+# Data
+data/data.sqlite

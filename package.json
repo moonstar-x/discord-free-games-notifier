@@ -32,7 +32,9 @@
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
     "discord.js": "^12.5.1",
-    "discord.js-commando": "github:discordjs/Commando"
+    "discord.js-commando": "github:discordjs/Commando",
+    "sqlite": "^4.0.19",
+    "sqlite3": "^5.0.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.19",
