@@ -16,7 +16,9 @@ const clientMock = {
   handleCommandError: jest.fn(),
   registry: {
     groups: [commandGroupMock, commandGroupMock]
-  }
+  },
+  setProvider: jest.fn(() => Promise.resolve()),
+  updatePresence: jest.fn()
 };
 
 const userMock = {
