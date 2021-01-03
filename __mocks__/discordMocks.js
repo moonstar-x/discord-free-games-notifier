@@ -34,7 +34,8 @@ const messageMock = {
   guild: guildMock,
   author: userMock,
   member: memberMock,
-  embed: jest.fn()
+  embed: jest.fn(),
+  say: jest.fn()
 };
 
 module.exports = {
