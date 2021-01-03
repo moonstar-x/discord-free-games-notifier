@@ -17,7 +17,7 @@ class AbstractProvider {
    * Returns a Promise that resolves to an array of currently available offers.
    * @returns {Promise<GameOffer[]>}
    */
-  getOffer() {
+  getOffers() {
     throw new Error('Method not implemented!');
   }
 
