@@ -46,7 +46,12 @@ const connectDatabase = (client) => {
     });
 };
 
+const GUILD_KEYS = {
+  channel: 'channel'
+};
+
 module.exports = {
   initializeDatabase,
-  connectDatabase
+  connectDatabase,
+  GUILD_KEYS
 };

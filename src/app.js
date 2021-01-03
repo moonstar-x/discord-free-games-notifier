@@ -14,9 +14,9 @@ const client = new ExtendedClient({
 client.registry
   .registerDefaultTypes()
   .registerGroups([
-    ['misc', 'Miscellaneous Commands']
-    // ['owner-only', 'Owner-Only Commands'],
-    // ['config', 'Configuration Commands']
+    ['misc', 'Miscellaneous Commands'],
+    ['config', 'Configuration Commands']
+    // ['owner-only', 'Owner-Only Commands']
   ])
   .registerCommandsIn(path.join(__dirname, 'commands'));
 

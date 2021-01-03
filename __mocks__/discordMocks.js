@@ -1,5 +1,16 @@
+const channelMock = {
+  name: 'channel',
+  id: '123',
+  viewable: true
+};
+
+const channelStoreMock = {
+  cache: [channelMock, channelMock]
+};
+
 const guildMock = {
-  name: 'guild'
+  name: 'guild',
+  channels: channelStoreMock
 };
 
 const commandMock = {
@@ -18,7 +29,11 @@ const clientMock = {
     groups: [commandGroupMock, commandGroupMock]
   },
   setProvider: jest.fn(() => Promise.resolve()),
-  updatePresence: jest.fn()
+  updatePresence: jest.fn(),
+  provider: {
+    set: jest.fn(),
+    get: jest.fn()
+  }
 };
 
 const userMock = {
@@ -45,5 +60,7 @@ module.exports = {
   userMock,
   memberMock,
   commandGroupMock,
-  commandMock
+  commandMock,
+  channelMock,
+  channelStoreMock
 };
