@@ -29,6 +29,11 @@ const memberMock = {
   displayName: 'nickname'
 };
 
+const channelMock = {
+  name: 'channel',
+  id: '123'
+};
+
 const messageMock = {
   reply: jest.fn(),
   guild: guildMock,
@@ -38,6 +43,10 @@ const messageMock = {
   say: jest.fn()
 };
 
+const channelStoreMock = {
+  cache: [channelMock, channelMock]
+};
+
 module.exports = {
   guildMock,
   clientMock,
@@ -45,5 +54,7 @@ module.exports = {
   userMock,
   memberMock,
   commandGroupMock,
-  commandMock
+  commandMock,
+  channelMock,
+  channelStoreMock
 };
