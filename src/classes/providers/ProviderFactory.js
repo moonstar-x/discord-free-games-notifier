@@ -14,11 +14,10 @@ class ProviderFactory {
 
   static getInstance(name) {
     switch (name) {
-      case 'epic':
-      case 'epicgames':
+      case ProviderFactory.providerNames.epic:
         return epicGamesProvider;
 
-      case 'steam':
+      case ProviderFactory.providerNames.steam:
         return steamProvider;
 
       default:
@@ -26,5 +25,10 @@ class ProviderFactory {
     }
   }
 }
+
+ProviderFactory.providerNames = {
+  steam: 'steam',
+  epic: 'epic'
+};
 
 module.exports = ProviderFactory;

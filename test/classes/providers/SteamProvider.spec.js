@@ -9,7 +9,7 @@ const path = require('path');
 jest.mock('axios');
 jest.mock('@greencoast/logger');
 
-const mockedHTML = fs.readFileSync(path.join(__dirname, '../../../__mocks__/steamPage.html'));
+const mockedHTML = fs.readFileSync(path.join(__dirname, '../../../__mocks__/steamPage'));
 
 describe('Classes - Providers - SteamProvider', () => {
   let provider;

@@ -10,7 +10,8 @@ class HelpCommand extends ExtendedCommand {
       memberName: 'help',
       group: 'misc',
       description: 'Get a description of all the commands you can use.',
-      examples: [`${client.commandPrefix}help`]
+      examples: [`${client.commandPrefix}help`],
+      guildOnly: false
     });
   }
 

@@ -25,14 +25,20 @@ describe('Classes - Providers - ProviderFactory', () => {
       expect(ProviderFactory.getInstance('epic')).toBeInstanceOf(EpicGamesProvider);
     });
 
-    it('should return an EpicGamesProvider if name is epicgames.', () => {
-      expect(ProviderFactory.getInstance('epicgames')).toBeInstanceOf(EpicGamesProvider);
-    });
-
     it('should throw if name is not valid.', () => {
       expect(() => {
         ProviderFactory.getInstance('any');
       }).toThrow(TypeError);
+    });
+  });
+
+  describe('static providerNames', () => {
+    it('should have a steam property.', () => {
+      expect(ProviderFactory.providerNames).toHaveProperty('steam');
+    });
+
+    it('should have a epic property.', () => {
+      expect(ProviderFactory.providerNames).toHaveProperty('epic');
     });
   });
 });
