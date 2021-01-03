@@ -24,10 +24,6 @@ class ExtendedClient extends CommandoClient {
     logger.error(info);
     logger.error(error);
   }
-
-  isDebugEnabled() {
-    return process.argv.includes('--debug');
-  }
 }
 
 module.exports = ExtendedClient;
