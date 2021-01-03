@@ -24,4 +24,4 @@ describe('Common - Context', () => {
       process.argv = oldArgs;
     });
   });
-})
+});

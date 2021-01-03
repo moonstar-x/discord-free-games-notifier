@@ -1,6 +1,5 @@
 const logger = require('@greencoast/logger');
 const Cache = require('../../src/classes/Cache');
-const context = require('../../src/common/context');
 
 let cache;
 
