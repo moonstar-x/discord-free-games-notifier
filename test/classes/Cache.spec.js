@@ -1,6 +1,10 @@
+const logger = require('@greencoast/logger');
 const Cache = require('../../src/classes/Cache');
+const context = require('../../src/common/context');
 
 let cache;
+
+jest.mock('@greencoast/logger');
 
 const nowSpy = jest.spyOn(Date, 'now');
 const mockedTimestamp = 1609573038753;
@@ -9,6 +13,11 @@ nowSpy.mockReturnValue(mockedTimestamp);
 describe('Classes - Cache', () => {
   beforeEach(() => {
     cache = new Cache();
+    logger.debug.mockClear();
+  });
+
+  it('should have a name property.', () => {
+    expect(cache).toHaveProperty('name');
   });
 
   it('should have a content property.', () => {
@@ -24,6 +33,11 @@ describe('Classes - Cache', () => {
       cache.content = 'new content';
       expect(cache.get()).toBe(cache.content);
     });
+    
+    it('should not log the operation if debug is disabled.', () => {
+      cache.get();
+      expect(logger.debug).not.toHaveBeenCalled();
+    });
   });
 
   describe('set()', () => {
@@ -35,6 +49,11 @@ describe('Classes - Cache', () => {
     it('should update the lastWriteTimestamp property.', () => {
       cache.set('new content');
       expect(cache.lastWriteTimestamp).toBe(mockedTimestamp);
+    });
+
+    it('should not log the operation if debug is disabled.', () => {
+      cache.set('new content');
+      expect(logger.debug).not.toHaveBeenCalled();
     });
   });
 

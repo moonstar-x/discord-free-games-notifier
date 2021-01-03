@@ -1,5 +1,9 @@
+const logger = require('@greencoast/logger');
+const { isDebugEnabled } = require('../common/context');
+
 class Cache {
-  constructor() {
+  constructor(name) {
+    this.name = name;
     this.content = null;
     this.lastWriteTimestamp = null;
   }
@@ -13,10 +17,18 @@ class Cache {
   }
 
   get() {
+    if (isDebugEnabled) {
+      logger.debug(`(CACHE): Read data for ${this.name} from cache.`);
+    }
+
     return this.content;
   }
 
   set(content) {
+    if (isDebugEnabled) {
+      logger.debug(`(CACHE): Wrote data for ${this.name} to cache.`);
+    }
+
     this.content = content;
     this.lastWriteTimestamp = Date.now();
   }
