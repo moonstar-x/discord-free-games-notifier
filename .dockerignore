@@ -1,0 +1,11 @@
+node_modules
+npm-debug.log
+
+config/settings.json
+data/data.sqlite
+.github
+.git
+
+__mocks__
+test
+jest.config.js
