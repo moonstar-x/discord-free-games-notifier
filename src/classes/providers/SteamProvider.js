@@ -40,7 +40,7 @@ class SteamProvider extends AbstractProvider {
         const offers = [];
         games.each((_, node) => {
           const a = node.children[1];
-          offers.push(AbstractProvider.createOffer(this.name, a.children[0].data, `https://store.steampowered.com${a.attribs.href}`));
+          offers.push(AbstractProvider.createOffer(this.name, a.children[0].data, `https://store.steampowered.com${a.attribs.href}`, a.attribs.href));
         });
 
         this.cache.set(offers);

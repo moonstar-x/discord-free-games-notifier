@@ -86,7 +86,8 @@ describe('Classes - Providers - EpicGamesProvider', () => {
       expectedOffer = {
         provider: provider.name,
         game: mockedGame.title,
-        url: `https://epicgames.com/store/product/${mockedGame.productSlug}/home`
+        url: `https://epicgames.com/store/product/${mockedGame.productSlug}/home`,
+        id: mockedGame.productSlug
       };
     });
 

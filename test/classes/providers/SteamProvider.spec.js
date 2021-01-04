@@ -67,7 +67,8 @@ describe('Classes - Providers - SteamProvider', () => {
         expectedOffer = {
           provider: provider.name,
           game: 'Blackout Z: Slaughterhouse Edition',
-          url: 'https://store.steampowered.com/app/729660/'
+          url: 'https://store.steampowered.com/app/729660/',
+          id: '/app/729660/'
         };
       });
   
