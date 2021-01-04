@@ -82,7 +82,7 @@ $setchannel <channel_mention>
 
 > Replace `$` with your actual bot prefix and `<channel_mention>` with the mention of the channel you wish to set.
 >
-> Make sure that the channel you're setting is viewable by the bot.
+> Make sure that the channel you're setting is viewable by the bot and that you have the `MANAGE_CHANNELS` permission.
 
 ## Commands
 
@@ -91,8 +91,8 @@ The following commands are available:
 | Command                         | Description                                                                                                                                                                                                           |
 |---------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `$help`                         | Receive a message with the available commands.                                                                                                                                                                        |
-| `$setchannel <channel_mention>` | Set the channel that should be used for the bot to send the automatic game offer announcements.                                                                                                                       |
-| `$offers <provider>`            | Get a list of current available offers. Replace `<provider>` with **epic** for Epic Games Store offers or **steam** for Steam offers. You can omit this argument to receive all offers from all providers supported. |
+| `$setchannel <channel_mention>` | Set the channel that should be used for the bot to send the automatic game offer announcements. The user issuing this command must have the `MANAGE_CHANNELS` permission.                                             |
+| `$offers <provider>`            | Get a list of current available offers. Replace `<provider>` with **epic** for Epic Games Store offers or **steam** for Steam offers. You can omit this argument to receive all offers from all providers supported.  |
 
 ## Docker Support
 
@@ -118,6 +118,11 @@ Starting the bot's container can be done by running:
 ```text
 docker run -it -e DISCORD_TOKEN="YOUR DISCORD TOKEN" -e CHANNEL_ID="YOUR CHANNEL ID" -v "/local/folder/for/data":"/opt/app/data" moonstarx/discord-free-games-notifier:latest
 ```
+
+## Add this bot to your server
+
+You can add this bot to your server by clicking in the image below:
+[![Add this bot to your server](https://i.imgur.com/SVAwPTU.png)](https://discord.com/oauth2/authorize?client_id=795561965954269205&scope=bot&permissions=2048)
 
 ## Author
 
