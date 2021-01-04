@@ -4,6 +4,7 @@ const sqlite3 = require('sqlite3');
 const logger = require('@greencoast/logger');
 const fs = require('fs');
 const path = require('path');
+const { devMode } = require('../common/context');
 
 const dataFolderPath = path.join(__dirname, '../../data');
 const dbFilePath = path.join(dataFolderPath, 'data.sqlite');
@@ -30,10 +31,15 @@ const connectDatabase = (client) => {
     driver: sqlite3.Database
   })
     .then((db) => {
-      client.setProvider(new SQLiteProvider(db))
+      return client.setProvider(new SQLiteProvider(db))
         .then(() => {
           logger.info('Database loaded.');
           client.updatePresence();
+
+          if (devMode) {
+            client.provider.clear('global');
+            logger.debug('(DB): Cleared global keys from db.');
+          }
         })
         .catch((error) => {
           logger.fatal('Could not set database as provider!');
