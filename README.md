@@ -122,6 +122,7 @@ docker run -it -e DISCORD_TOKEN="YOUR DISCORD TOKEN" -e CHANNEL_ID="YOUR CHANNEL
 ## Add this bot to your server
 
 You can add this bot to your server by clicking in the image below:
+
 [![Add this bot to your server](https://i.imgur.com/SVAwPTU.png)](https://discord.com/oauth2/authorize?client_id=795561965954269205&scope=bot&permissions=2048)
 
 ## Author
