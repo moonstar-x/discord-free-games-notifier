@@ -1,7 +1,11 @@
 const channelMock = {
   name: 'channel',
   id: '123',
-  viewable: true
+  viewable: true,
+  send: jest.fn(() => Promise.resolve()),
+  guild: {
+    name: 'guild'
+  }
 };
 
 const channelStoreMock = {
@@ -32,7 +36,8 @@ const clientMock = {
   updatePresence: jest.fn(),
   provider: {
     set: jest.fn(),
-    get: jest.fn()
+    get: jest.fn(),
+    clear: jest.fn()
   }
 };
 

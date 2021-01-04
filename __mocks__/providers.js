@@ -1,7 +1,8 @@
 const offerMock = {
   game: 'name',
   provider: 'provider',
-  url: 'url'
+  url: 'url',
+  id: 'id'
 };
 
 const providerMock = {
