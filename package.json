@@ -10,7 +10,7 @@
     "test:once-showlogs": "jest",
     "start": "node ./src/app.js",
     "debug": "node ./src/app.js --debug",
-    "dev": "nodemon --exec node ./src/app.js",
+    "dev": "NODE_ENV=development nodemon --exec node ./src/app.js",
     "lint:errors-only": "eslint src test --quiet",
     "lint": "eslint src test"
   },
@@ -31,6 +31,7 @@
     "@greencoast/logger": "^1.0.1",
     "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.5",
+    "cron": "^1.8.2",
     "discord.js": "^12.5.1",
     "discord.js-commando": "github:discordjs/Commando",
     "sqlite": "^4.0.19",

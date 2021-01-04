@@ -1,3 +1,4 @@
+/* eslint-disable max-params */
 class AbstractProvider {
   constructor() {
     if (new.target === AbstractProvider) {
@@ -26,11 +27,12 @@ class AbstractProvider {
    * @param {...Arguments} _ The GameOffer properties.
    * @returns {GameOffer}
    */
-  static createOffer(provider, game, url) {
+  static createOffer(provider, game, url, id) {
     return {
       provider,
       game,
-      url
+      url,
+      id
     };
   }
 }

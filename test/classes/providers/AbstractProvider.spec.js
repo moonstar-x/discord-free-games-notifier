@@ -13,10 +13,11 @@ describe('Classes - Providers - AbstractProvider', () => {
       const expected = {
         provider: 'provider',
         game: 'game',
-        url: 'url'
+        url: 'url',
+        id: 'id'
       };
 
-      expect(AbstractProvider.createOffer('provider', 'game', 'url')).toStrictEqual(expected);
+      expect(AbstractProvider.createOffer('provider', 'game', 'url', 'id')).toStrictEqual(expected);
     });
   });
 });
