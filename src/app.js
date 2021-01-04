@@ -55,7 +55,10 @@ client.on('rateLimit', (info) => {
 
 client.on('ready', () => {
   logger.info('Connected to Discord! - Ready.');
-  connectDatabase(client);
+  connectDatabase(client)
+    .then(() => {
+      client.initializeNotifyJob();
+    });
 });
 
 client.on('warn', (info) => {
