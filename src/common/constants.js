@@ -13,7 +13,7 @@ const MESSAGE_EMBED = {
 
 const CRON = {
   EVERY_MINUTE: '* * * * *',
-  EVERY_30_MINS: '30 * * * *',
+  EVERY_30_MINS: '*/30 * * * *',
   MOMENT_DATE_FORMAT: 'ddd, D/M/Y @hh:mm:ss a'
 };
 
