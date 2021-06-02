@@ -11,7 +11,7 @@ A Discord bot that will notify when free games on Steam or Epic Games come out. 
 
 ## Requirements
 
-To self-host this bot, you'll need the following:
+To self-host this bot, you'll need the following::
 
 * [git](https://git-scm.com/)
 * [node.js](https://nodejs.org/en/) (Version 12 or higher is required.)
