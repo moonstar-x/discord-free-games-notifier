@@ -107,4 +107,4 @@ dist
 config/settings.json
 
 # Data
-data/data.sqlite
+data/

@@ -1,5 +1,6 @@
 const path = require('path');
 const { ExtendedClient, ConfigProvider } = require('@greencoast/discord.js-extended');
+const LevelDataProvider = require('@greencoast/discord.js-extended/dist/providers/LevelDataProvider').default;
 
 const config = new ConfigProvider({
   configPath: path.join(__dirname, '../config/settings.json'),
@@ -36,6 +37,8 @@ const client = new ExtendedClient({
   }
 });
 
+const provider = new LevelDataProvider(client, path.join(__dirname, '../data'));
+
 client
   .registerDefaultEvents()
   .registerExtraDefaultEvents();
@@ -47,6 +50,9 @@ client.registry
   ])
   .registerCommandsIn(path.join(__dirname, './commands'));
 
-// TODO: Initialize notifier.
+client.on('ready', async() => {
+  await client.setDataProvider(provider);
+  // TODO: Initialize notifier.
+});
 
 client.login(config.get('TOKEN'));
