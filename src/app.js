@@ -1,6 +1,7 @@
 const path = require('path');
 const { ExtendedClient, ConfigProvider } = require('@greencoast/discord.js-extended');
 const LevelDataProvider = require('@greencoast/discord.js-extended/dist/providers/LevelDataProvider').default;
+const { DEBUG_ENABLED, DEV_MODE } = require('./common/context');
 
 const config = new ConfigProvider({
   configPath: path.join(__dirname, '../config/settings.json'),
@@ -22,7 +23,7 @@ const config = new ConfigProvider({
 
 const client = new ExtendedClient({
   config,
-  debug: process.argv.includes('--debug'),
+  debug: DEBUG_ENABLED,
   errorOwnerReporting: config.get('OWNER_REPORTING'),
   owner: config.get('OWNER_ID'),
   prefix: config.get('PREFIX'),
@@ -53,7 +54,7 @@ client.registry
 client.on('ready', async() => {
   await client.setDataProvider(provider);
 
-  if (process.env.NODE_ENV === 'development') {
+  if (DEV_MODE) {
     client.dataProvider.clearGlobal();
   }
 
