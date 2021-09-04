@@ -10,7 +10,12 @@ const CRON = {
   MOMENT_DATE_FORMAT: 'ddd, D/M/Y @hh:mm:ss a'
 };
 
+const GUILD_KEYS = {
+  channel: 'channel'
+};
+
 module.exports = {
   MESSAGE_EMBED,
-  CRON
+  CRON,
+  GUILD_KEYS
 };
