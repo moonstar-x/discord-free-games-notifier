@@ -3,11 +3,13 @@ const { CronJob } = require('cron');
 const { CRON, GUILD_KEYS } = require('../common/constants');
 const { DEV_MODE } = require('../common/context');
 const ProviderFactory = require('./providers/ProviderFactory');
+const OffersCache = require('./OffersCache');
 
 class OffersNotifier {
   constructor(client) {
     this.client = client;
     this.notifyJob = null;
+    this.cache = new OffersCache(client.dataProvider);
   }
 
   initialize() {
@@ -55,11 +57,11 @@ class OffersNotifier {
   async notify() {
     const providers = ProviderFactory.getAll();
     const channels = await this.getChannelsForEnabledGuilds();
-    const allOffers = this.filterValidOffers(await Promise.all(providers.map((provider) => provider.getOffers())));
+    const currentOffers = this.filterValidOffers(await Promise.all(providers.map((provider) => provider.getOffers())));
 
     let atLeastOneOfferNotified = false;
 
-    for (const offer of allOffers) {
+    for (const offer of currentOffers) {
       const notified = await this.notifySingleOffer(offer, channels);
 
       if (!atLeastOneOfferNotified) {
@@ -67,13 +69,13 @@ class OffersNotifier {
       }
     }
 
-    this.updateNotifiedCache(allOffers);
+    this.cache.update(currentOffers);
 
     return atLeastOneOfferNotified;
   }
 
   async notifySingleOffer(offer, channels) {
-    const alreadyNotified = await this.client.dataProvider.getGlobal(`notified-${offer.id}`, false);
+    const alreadyNotified = await this.cache.isOfferCached(offer);
 
     if (alreadyNotified) {
       return false;
@@ -88,14 +90,6 @@ class OffersNotifier {
     });
 
     return true;
-  }
-
-  async updateNotifiedCache(allOffers) {
-    await this.client.dataProvider.clearGlobal();
-
-    allOffers.forEach((offer) => {
-      this.client.dataProvider.setGlobal(`notified-${offer.id}`, true);
-    });
   }
 }
 
