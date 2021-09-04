@@ -31,7 +31,13 @@ class EpicGamesProvider extends AbstractProvider {
         const games = data.data.Catalog.searchStore.elements;
         const offers = games.reduce((offers, game) => {
           if (game.promotions && game.promotions.promotionalOffers && game.promotions.promotionalOffers.length > 0) {
-            offers.push(AbstractProvider.createOffer(this.name, game.title, `https://epicgames.com/store/product/${game.productSlug}/home`, game.productSlug));
+            let url = `https://epicgames.com/store/product/${game.productSlug}`;
+
+            if (!url.endsWith('/home')) {
+              url += '/home';
+            }
+            
+            offers.push(AbstractProvider.createOffer(this.name, game.title, url, game.productSlug));
           }
           return offers;
         }, []);

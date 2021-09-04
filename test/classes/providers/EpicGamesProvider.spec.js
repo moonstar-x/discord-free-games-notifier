@@ -103,6 +103,23 @@ describe('Classes - Providers - EpicGamesProvider', () => {
         });
     });
 
+    it('should resolve an array of correct GameOffers if productSlug ends with /home.', () => {
+      axios.get.mockImplementationOnce(() => {
+        const newMockedData = {
+          ...mockedData,
+          productSlug: 'slug/home'
+        };
+
+        return Promise.resolve({ data: newMockedData });
+      });
+
+      return provider.getOffers()
+        .then((offers) => {
+          expect(offers).toBeInstanceOf(Array);
+          expect(offers).toContainEqual(expectedOffer);
+        });
+    });
+
     it('should resolve null if getData rejects.', () => {
       axios.get.mockRejectedValueOnce(new Error());
       return provider.getOffers()
