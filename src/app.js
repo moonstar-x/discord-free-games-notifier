@@ -59,4 +59,8 @@ client.on('ready', async() => {
   client.notifier.initialize();
 });
 
+client.on('guildDelete', (guild) => {
+  client.dataProvider.clear(guild);
+});
+
 client.login(config.get('TOKEN'));
