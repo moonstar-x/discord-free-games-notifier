@@ -52,6 +52,11 @@ client.registry
 
 client.on('ready', async() => {
   await client.setDataProvider(provider);
+
+  if (process.env.NODE_ENV === 'development') {
+    client.dataProvider.clearGlobal();
+  }
+
   // TODO: Initialize notifier.
 });
 
