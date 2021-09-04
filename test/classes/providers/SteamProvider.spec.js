@@ -9,6 +9,8 @@ const path = require('path');
 jest.mock('axios');
 jest.mock('@greencoast/logger');
 
+jest.spyOn(Date, 'now').mockReturnValue(1000);
+
 const mockedHTML = fs.readFileSync(path.join(__dirname, '../../../__mocks__/steamPage'));
 
 describe('Classes - Providers - SteamProvider', () => {
@@ -68,7 +70,8 @@ describe('Classes - Providers - SteamProvider', () => {
           provider: provider.name,
           game: 'Battlefield 1 Shortcut Kit: Infantry Bundle',
           url: 'https://store.steampowered.com/app/1314764/Battlefield_1_Shortcut_Kit_Infantry_Bundle/?snr=1_7_7_2300_150_1',
-          id: '1314764'
+          id: '1314764',
+          lastFetched: 1000
         };
       });
   

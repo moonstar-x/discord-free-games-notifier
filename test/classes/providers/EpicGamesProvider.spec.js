@@ -7,6 +7,8 @@ const logger = require('@greencoast/logger');
 jest.mock('axios');
 jest.mock('@greencoast/logger');
 
+jest.spyOn(Date, 'now').mockReturnValue(1000);
+
 const mockedGame = {
   title: 'game',
   productSlug: 'slug',
@@ -87,7 +89,8 @@ describe('Classes - Providers - EpicGamesProvider', () => {
         provider: provider.name,
         game: mockedGame.title,
         url: `https://epicgames.com/store/product/${mockedGame.productSlug}/home`,
-        id: mockedGame.productSlug
+        id: mockedGame.productSlug,
+        lastFetched: 1000
       };
     });
 
