@@ -12,6 +12,7 @@ const channelMock = {
 
 const guildMock = {
   name: 'guild',
+  id: '123',
   channels: {
     cache: new Collection([[channelMock.id, channelMock], [channelMock.id, channelMock]])
   }
