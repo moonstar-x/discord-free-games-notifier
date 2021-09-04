@@ -1,6 +1,7 @@
 const path = require('path');
 const { ExtendedClient, ConfigProvider } = require('@greencoast/discord.js-extended');
 const LevelDataProvider = require('@greencoast/discord.js-extended/dist/providers/LevelDataProvider').default;
+const OffersNotifier = require('./classes/OffersNotifier');
 const { DEBUG_ENABLED, DEV_MODE } = require('./common/context');
 
 const config = new ConfigProvider({
@@ -58,7 +59,8 @@ client.on('ready', async() => {
     client.dataProvider.clearGlobal();
   }
 
-  // TODO: Initialize notifier.
+  client.notifier = new OffersNotifier(client);
+  client.notifier.initialize();
 });
 
 client.login(config.get('TOKEN'));
