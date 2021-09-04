@@ -7,6 +7,8 @@ const logger = require('@greencoast/logger');
 jest.mock('axios');
 jest.mock('@greencoast/logger');
 
+jest.spyOn(Date, 'now').mockReturnValue(1000);
+
 const mockedGame = {
   title: 'game',
   productSlug: 'slug',
@@ -87,7 +89,8 @@ describe('Classes - Providers - EpicGamesProvider', () => {
         provider: provider.name,
         game: mockedGame.title,
         url: `https://epicgames.com/store/product/${mockedGame.productSlug}/home`,
-        id: mockedGame.productSlug
+        id: mockedGame.productSlug,
+        lastFetched: 1000
       };
     });
 
@@ -96,6 +99,23 @@ describe('Classes - Providers - EpicGamesProvider', () => {
     });
 
     it('should resolve an array of GameOffers.', () => {
+      return provider.getOffers()
+        .then((offers) => {
+          expect(offers).toBeInstanceOf(Array);
+          expect(offers).toContainEqual(expectedOffer);
+        });
+    });
+
+    it('should resolve an array of correct GameOffers if productSlug ends with /home.', () => {
+      axios.get.mockImplementationOnce(() => {
+        const newMockedData = {
+          ...mockedData,
+          productSlug: 'slug/home'
+        };
+
+        return Promise.resolve({ data: newMockedData });
+      });
+
       return provider.getOffers()
         .then((offers) => {
           expect(offers).toBeInstanceOf(Array);

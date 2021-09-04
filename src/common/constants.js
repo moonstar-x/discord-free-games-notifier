@@ -1,10 +1,3 @@
-const ACTIVITY_TYPE = {
-  playing: 'PLAYING',
-  streaming: 'STREAMING',
-  listening: 'LISTENING',
-  watching: 'WATCHING'
-};
-
 const MESSAGE_EMBED = {
   color: '#43aa8b',
   thumbnail: 'https://i.imgur.com/Tqnk48j.png',
@@ -17,8 +10,12 @@ const CRON = {
   MOMENT_DATE_FORMAT: 'ddd, D/M/Y @hh:mm:ss a'
 };
 
+const GUILD_KEYS = {
+  channel: 'channel'
+};
+
 module.exports = {
-  ACTIVITY_TYPE,
   MESSAGE_EMBED,
-  CRON
+  CRON,
+  GUILD_KEYS
 };

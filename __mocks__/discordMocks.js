@@ -1,3 +1,5 @@
+const { Collection } = require('discord.js');
+
 const channelMock = {
   name: 'channel',
   id: '123',
@@ -8,13 +10,12 @@ const channelMock = {
   }
 };
 
-const channelStoreMock = {
-  cache: [channelMock, channelMock]
-};
-
 const guildMock = {
   name: 'guild',
-  channels: channelStoreMock
+  id: '123',
+  channels: {
+    cache: new Collection([[channelMock.id, channelMock], [channelMock.id, channelMock]])
+  }
 };
 
 const commandMock = {
@@ -34,10 +35,16 @@ const clientMock = {
   },
   setProvider: jest.fn(() => Promise.resolve()),
   updatePresence: jest.fn(),
-  provider: {
+  dataProvider: {
     set: jest.fn(),
     get: jest.fn(),
-    clear: jest.fn()
+    clear: jest.fn(),
+    getGlobal: jest.fn(),
+    setGlobal: jest.fn(),
+    clearGlobal: jest.fn()
+  },
+  guilds: {
+    cache: new Collection([[guildMock.id, guildMock], [guildMock.id, guildMock]])
   }
 };
 
@@ -54,8 +61,14 @@ const messageMock = {
   guild: guildMock,
   author: userMock,
   member: memberMock,
-  embed: jest.fn(),
-  say: jest.fn()
+  channel: {
+    send: jest.fn()
+  },
+  mentions: {
+    channels: {
+      first: jest.fn(() => channelMock)
+    }
+  }
 };
 
 module.exports = {
@@ -66,6 +79,5 @@ module.exports = {
   memberMock,
   commandGroupMock,
   commandMock,
-  channelMock,
-  channelStoreMock
+  channelMock
 };

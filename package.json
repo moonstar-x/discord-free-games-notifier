@@ -1,8 +1,8 @@
 {
   "name": "discord-free-games-notifier",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A Discord bot that will notify when free games on Steam or Epic Games come out.",
-  "main": "src/app.js",
+  "main": "./src/app.js",
   "scripts": {
     "test": "jest --watchAll --silent",
     "test:showlogs": "jest --watchAll",
@@ -28,21 +28,20 @@
   },
   "homepage": "https://github.com/moonstar-x/discord-free-games-notifier#readme",
   "dependencies": {
-    "@greencoast/logger": "^1.0.1",
+    "@greencoast/discord.js-extended": "^1.2.0",
+    "@greencoast/logger": "^1.1.0",
     "axios": "^0.21.1",
-    "cheerio": "^1.0.0-rc.5",
+    "cheerio": "^1.0.0-rc.10",
     "cron": "^1.8.2",
-    "discord.js": "^12.5.1",
-    "discord.js-commando": "github:discordjs/Commando",
-    "sqlite": "^4.0.19",
-    "sqlite3": "^5.0.0"
+    "discord.js": "^12.5.3",
+    "level": "^7.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^26.0.19",
-    "eslint": "^7.17.0",
+    "@types/jest": "^27.0.1",
+    "eslint": "^7.32.0",
     "eslint-config-greencoast": "0.0.2",
-    "jest": "^26.6.3",
-    "nodemon": "^2.0.6",
+    "jest": "^27.1.0",
+    "nodemon": "^2.0.12",
     "text-encoding": "^0.7.0"
   }
 }

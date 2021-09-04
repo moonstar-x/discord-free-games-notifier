@@ -1,6 +1,8 @@
 /* eslint-disable no-new */
 const AbstractProvider = require('../../../src/classes/providers/AbstractProvider');
 
+jest.spyOn(Date, 'now').mockReturnValue(1000);
+
 describe('Classes - Providers - AbstractProvider', () => {
   it('should throw if trying to instantiate.', () => {
     expect(() => {
@@ -14,7 +16,8 @@ describe('Classes - Providers - AbstractProvider', () => {
         provider: 'provider',
         game: 'game',
         url: 'url',
-        id: 'id'
+        id: 'id',
+        lastFetched: 1000
       };
 
       expect(AbstractProvider.createOffer('provider', 'game', 'url', 'id')).toStrictEqual(expected);
