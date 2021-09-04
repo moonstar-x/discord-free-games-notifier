@@ -42,17 +42,20 @@ class OffersNotifier {
     }, []);
   }
 
-  async notify() {
-    const providers = ProviderFactory.getAll();
-    const channels = await this.getChannelsForEnabledGuilds();
-    const allOffersByProvider = await Promise.all(providers.map((provider) => provider.getOffers()));
-    const allOffers = allOffersByProvider.reduce((all, offers) => {
+  filterValidOffers(allOffersByProvider) {
+    return allOffersByProvider.reduce((all, offers) => {
       if (offers) {
         all.push(...offers);
       }
 
       return all;
     }, []);
+  }
+
+  async notify() {
+    const providers = ProviderFactory.getAll();
+    const channels = await this.getChannelsForEnabledGuilds();
+    const allOffers = this.filterValidOffers(await Promise.all(providers.map((provider) => provider.getOffers())));
 
     let atLeastOneOfferNotified = false;
 
@@ -87,8 +90,8 @@ class OffersNotifier {
     return true;
   }
 
-  updateNotifiedCache(allOffers) {
-    this.client.dataProvider.clearGlobal();
+  async updateNotifiedCache(allOffers) {
+    await this.client.dataProvider.clearGlobal();
 
     allOffers.forEach((offer) => {
       this.client.dataProvider.setGlobal(`notified-${offer.id}`, true);
