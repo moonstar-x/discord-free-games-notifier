@@ -1,8 +1,8 @@
-const isDebugEnabled = process.argv.includes('--debug');
+const DEBUG_ENABLED = process.argv.includes('--debug');
 
-const devMode = process.env.NODE_ENV === 'development';
+const DEV_MODE = process.env.NODE_ENV === 'development';
 
 module.exports = {
-  isDebugEnabled,
-  devMode
+  DEBUG_ENABLED,
+  DEV_MODE
 };
