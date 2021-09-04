@@ -45,50 +45,54 @@ class OffersNotifier {
   async notify() {
     const providers = ProviderFactory.getAll();
     const channels = await this.getChannelsForEnabledGuilds();
-    const allOffers = [];
+    const allOffersByProvider = await Promise.all(providers.map((provider) => provider.getOffers()));
+    const allOffers = allOffersByProvider.reduce((all, offers) => {
+      if (offers) {
+        all.push(...offers);
+      }
 
-    const offersNotified = await Promise.all(providers.map(async(provider) => {
-      const offers = await provider.getOffers();
-      allOffers.push(...offers);
+      return all;
+    }, []);
 
-      return await this.notifyOffersFromProvider(offers, channels);
-    }));
+    let atLeastOneOfferNotified = false;
 
+    for (const offer of allOffers) {
+      const notified = await this.notifySingleOffer(offer, channels);
+
+      if (!atLeastOneOfferNotified) {
+        atLeastOneOfferNotified = notified;
+      }
+    }
+
+    this.updateNotifiedCache(allOffers);
+
+    return atLeastOneOfferNotified;
+  }
+
+  async notifySingleOffer(offer, channels) {
+    const alreadyNotified = await this.client.dataProvider.getGlobal(`notified-${offer.id}`, false);
+
+    if (alreadyNotified) {
+      return false;
+    }
+
+    channels.forEach((channel) => {
+      channel.send(`${offer.game} is free to keep on ${offer.provider}, you can grab it from here: ${offer.url}`)
+        .catch((error) => {
+          logger.error(`Something happened when trying to notify ${channel.name} from ${channel.guild.name}, perhaps I don't have enough permissions to send the message?`);
+          logger.error(error);
+        });
+    });
+
+    return true;
+  }
+
+  updateNotifiedCache(allOffers) {
     this.client.dataProvider.clearGlobal();
-    
+
     allOffers.forEach((offer) => {
       this.client.dataProvider.setGlobal(`notified-${offer.id}`, true);
     });
-
-    return offersNotified.some(Boolean);
-  }
-
-  async notifyOffersFromProvider(offers, channels) {
-    let notified = false;
-    
-    if (!offers || offers.length < 1) {
-      return notified;
-    }
-
-    for (const offer of offers) {
-      const alreadyNotified = await this.client.dataProvider.getGlobal(`notified-${offer.id}`, false);
-
-      if (alreadyNotified) {
-        continue;
-      }
-
-      channels.forEach((channel) => {
-        channel.send(`${offer.game} is free to keep on ${offer.provider}, you can grab it from here: ${offer.url}`)
-          .catch((error) => {
-            logger.error(`Something happened when trying to notify ${channel.name} from ${channel.guild.name}, perhaps I don't have enough permissions to send the message?`);
-            logger.error(error);
-          });
-      });
-
-      notified = true;
-    }
-
-    return notified;
   }
 }
 
