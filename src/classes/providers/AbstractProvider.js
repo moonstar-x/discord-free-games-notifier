@@ -32,7 +32,8 @@ class AbstractProvider {
       provider,
       game,
       url,
-      id
+      id,
+      lastFetched: Date.now()
     };
   }
 }
