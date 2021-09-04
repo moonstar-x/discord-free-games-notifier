@@ -1,6 +1,5 @@
 const logger = require('@greencoast/logger');
-const OffersCommand = require('../../../src/commands/misc/Offers');
-const ExtendedCommand = require('../../../src/classes/extensions/ExtendedCommand');
+const OffersCommand = require('../../../src/commands/misc/OffersCommand');
 const ProviderFactory = require('../../../src/classes/providers/ProviderFactory');
 const { clientMock, messageMock } = require('../../../__mocks__/discordMocks');
 const { offerMock, providerMock } = require('../../../__mocks__/providers');
@@ -10,7 +9,7 @@ jest.mock('../../../src/classes/providers/ProviderFactory');
 
 let command;
 
-describe('Commands - Offers', () => {
+describe('Commands - OffersCommand', () => {
   beforeAll(() => {
     ProviderFactory.getAll.mockReturnValue([providerMock, providerMock]);
     ProviderFactory.getInstance.mockImplementation((name) => {
@@ -23,21 +22,9 @@ describe('Commands - Offers', () => {
 
   beforeEach(() => {
     logger.info.mockClear();
-    messageMock.say.mockClear();
+    messageMock.channel.send.mockClear();
 
     command = new OffersCommand(clientMock);
-  });
-
-  it('should be instance of ExtendedCommand.', () => {
-    expect(command).toBeInstanceOf(ExtendedCommand);
-  });
-
-  it('should call logger.info with the proper message.', () => {
-    jest.spyOn(command, 'handleAllProviders').mockReturnValue(null);
-    command.run(messageMock, []);
-
-    expect(logger.info).toHaveBeenCalledTimes(1);
-    expect(logger.info).toHaveBeenCalledWith(`User ${messageMock.member.displayName} executed ${command.name} from ${messageMock.guild.name}.`);
   });
 
   describe('run()', () => {
@@ -61,10 +48,6 @@ describe('Commands - Offers', () => {
   });
 
   describe('prepareMessageForOffer()', () => {
-    it('should return a string.', () => {
-      expect(typeof command.prepareMessageForOffer('header', [offerMock])).toBe('string');
-    });
-
     it('should return a string with the proper structure.', () => {
       expect(command.prepareMessageForOffer('header', [offerMock])).toBe(`header\n\n1. ${offerMock.game} - available at: ${offerMock.url}\n`);
     });
@@ -72,66 +55,59 @@ describe('Commands - Offers', () => {
 
   describe('handleAllProviders()', () => {
     beforeEach(() => {
-      providerMock.getOffers.mockReturnValue(Promise.resolve([offerMock]));
-    });
-
-    it('should return an array of promises.', () => {
-      const result = command.handleAllProviders(messageMock);
-      expect(result).toBeInstanceOf(Array);
-      result.forEach((res) => {
-        expect(res).toBeInstanceOf(Promise);
-      });
+      providerMock.getOffers.mockResolvedValue([offerMock]);
     });
 
     it('should send a message if something happened when fetching the offers.', () => {
-      providerMock.getOffers.mockReturnValue(Promise.resolve(null));
+      providerMock.getOffers.mockResolvedValue(null);
 
-      return Promise.all(command.handleAllProviders(messageMock))
+      return command.handleAllProviders(messageMock)
         .then(() => {
-          expect(messageMock.say).toHaveBeenCalledTimes(2);
-          expect(messageMock.say).toHaveBeenCalledWith(`Something happened when looking for offers in ${providerMock.name}. Try again later.`);
+          expect(messageMock.channel.send).toHaveBeenCalledTimes(2);
+          expect(messageMock.channel.send.mock.calls[0][0]).toContain('Something happened');
         });
     });
 
     it('should not do anything if no offers are available.', () => {
-      providerMock.getOffers.mockReturnValue(Promise.resolve([]));
+      providerMock.getOffers.mockResolvedValue([]);
 
-      return Promise.all(command.handleAllProviders(messageMock))
+      return command.handleAllProviders(messageMock)
         .then(() => {
-          expect(messageMock.say).not.toHaveBeenCalled();
+          expect(messageMock.channel.send).not.toHaveBeenCalled();
         });
     });
 
     it('should send a message with the offer string.', () => {
       jest.spyOn(command, 'prepareMessageForOffer').mockReturnValue('message');
 
-      return Promise.all(command.handleAllProviders(messageMock))
+      return command.handleAllProviders(messageMock)
         .then(() => {
-          expect(messageMock.say).toHaveBeenCalledTimes(2);
-          expect(messageMock.say).toHaveBeenCalledWith('message');
+          expect(messageMock.channel.send).toHaveBeenCalledTimes(2);
+          expect(messageMock.channel.send).toHaveBeenCalledWith('message');
         });
     });
   });
 
   describe('handleSingleProvider()', () => {
-    it('should return a Promise.', () => {
-      expect(command.handleSingleProvider(messageMock, 'valid')).toBeInstanceOf(Promise);
-    });
-
     it('should send a message if the providerName is not valid.', () => {
-      command.handleSingleProvider(messageMock, 'invalid');
-
-      expect(messageMock.say).toHaveBeenCalledTimes(1);
+      return command.handleSingleProvider(messageMock, 'invalid')
+        .then(() => {
+          expect(messageMock.channel.send).toHaveBeenCalledTimes(1);
+        });
     });
 
-    it('should throw if something else happened.', () => {
+    it('should reject if something else happened.', () => {
+      const expectedError = new Error('Oops');
       ProviderFactory.getInstance.mockImplementationOnce(() => {
-        throw new Error();
+        throw expectedError;
       });
 
-      expect(() => {
-        command.handleSingleProvider(messageMock, 'valid');
-      }).toThrow();
+      expect.assertions(1);
+
+      return command.handleSingleProvider(messageMock, 'valid')
+        .catch((error) => {
+          expect(error).toBe(expectedError);
+        });
     });
 
     it('should send a message if something happened when fetching the offers.', () => {
@@ -139,8 +115,8 @@ describe('Commands - Offers', () => {
 
       return command.handleSingleProvider(messageMock, 'valid')
         .then(() => {
-          expect(messageMock.say).toHaveBeenCalledTimes(1);
-          expect(messageMock.say).toHaveBeenCalledWith(`Something happened when looking for offers in ${providerMock.name}. Try again later.`);
+          expect(messageMock.channel.send).toHaveBeenCalledTimes(1);
+          expect(messageMock.channel.send.mock.calls[0][0]).toContain('Something happened');
         });
     });
 
@@ -149,8 +125,8 @@ describe('Commands - Offers', () => {
 
       return command.handleSingleProvider(messageMock, 'valid')
         .then(() => {
-          expect(messageMock.say).toHaveBeenCalledTimes(1);
-          expect(messageMock.say).toHaveBeenCalledWith(`There are no free games currently in ${providerMock.name}. :(`);
+          expect(messageMock.channel.send).toHaveBeenCalledTimes(1);
+          expect(messageMock.channel.send.mock.calls[0][0]).toContain('no free games');
         });
     });
 
@@ -159,8 +135,8 @@ describe('Commands - Offers', () => {
 
       return command.handleSingleProvider(messageMock, 'valid')
         .then(() => {
-          expect(messageMock.say).toHaveBeenCalledTimes(1);
-          expect(messageMock.say).toHaveBeenCalledWith('message');
+          expect(messageMock.channel.send).toHaveBeenCalledTimes(1);
+          expect(messageMock.channel.send).toHaveBeenCalledWith('message');
         });
     });
   });

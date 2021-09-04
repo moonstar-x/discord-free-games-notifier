@@ -25,11 +25,12 @@ class OffersCommand extends Command {
       const offers = await provider.getOffers();
 
       if (!offers) {
-        return message.channel.send(`Something happened when looking for offers in ${provider.name}. Try again later.`);
+        message.channel.send(`Something happened when looking for offers in ${provider.name}. Try again later.`);
+        continue;
       }
 
       if (offers.length < 1) {
-        return;
+        continue;
       }
 
       message.channel.send(this.prepareMessageForOffer(`Here are the offers available currently for ${provider.name}:`, offers));
