@@ -100,11 +100,12 @@ n!setchannel <channel_mention>
 
 The following commands are available:
 
-| Command                         | Description                                                                                                                                                                                                           |
-|---------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `n!help`                         | Receive a message with the available commands.                                                                                                                                                                        |
-| `n!setchannel <channel_mention>` | Set the channel that should be used for the bot to send the automatic game offer announcements. The user issuing this command must have the `MANAGE_CHANNELS` permission.                                             |
-| `n!offers <provider>`            | Get a list of current available offers. Replace `<provider>` with **epic** for Epic Games Store offers or **steam** for Steam offers. You can omit this argument to receive all offers from all providers supported.  |
+| Command                          | Aliases     | Description                                                                                                                                                                                                           |
+|----------------------------------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `n!help`                         | `n!h`       | Receive a message with the available commands.                                                                                                                                                                        |
+| `n!setchannel <channel_mention>` | `n!channel` | Set the channel that should be used for the bot to send the automatic game offer announcements. The user issuing this command must have the `MANAGE_CHANNELS` permission.                                             |
+| `n!disable`                      |             | Disable the automatic game offer announcements on this server. You can still use the `n!offers` command. The user issuing this command must have the `MANAGE_CHANNELS` permission.                                    |
+| `n!offers <provider>`            |             | Get a list of current available offers. Replace `<provider>` with **epic** for Epic Games Store offers or **steam** for Steam offers. You can omit this argument to receive all offers from all providers supported.  |
 
 ## Docker Support
 
