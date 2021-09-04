@@ -1,5 +1,5 @@
 const logger = require('@greencoast/logger');
-const { isDebugEnabled } = require('../common/context');
+const { DEBUG_ENABLED } = require('../common/context');
 
 class Cache {
   constructor(name) {
@@ -17,7 +17,7 @@ class Cache {
   }
 
   get() {
-    if (isDebugEnabled) {
+    if (DEBUG_ENABLED) {
       logger.debug(`(CACHE): Read data for ${this.name} from cache.`);
     }
 
@@ -25,7 +25,7 @@ class Cache {
   }
 
   set(content) {
-    if (isDebugEnabled) {
+    if (DEBUG_ENABLED) {
       logger.debug(`(CACHE): Wrote data for ${this.name} to cache.`);
     }
 
