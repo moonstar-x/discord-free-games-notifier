@@ -34,7 +34,7 @@ const clientMock = {
   },
   setProvider: jest.fn(() => Promise.resolve()),
   updatePresence: jest.fn(),
-  provider: {
+  dataProvider: {
     set: jest.fn(),
     get: jest.fn(),
     clear: jest.fn()
@@ -54,8 +54,14 @@ const messageMock = {
   guild: guildMock,
   author: userMock,
   member: memberMock,
-  embed: jest.fn(),
-  say: jest.fn()
+  channel: {
+    send: jest.fn()
+  },
+  mentions: {
+    channels: {
+      first: jest.fn(() => channelMock)
+    }
+  }
 };
 
 module.exports = {
