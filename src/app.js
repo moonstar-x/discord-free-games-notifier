@@ -2,7 +2,7 @@ const path = require('path');
 const { ExtendedClient, ConfigProvider } = require('@greencoast/discord.js-extended');
 const LevelDataProvider = require('@greencoast/discord.js-extended/dist/providers/LevelDataProvider').default;
 const OffersNotifier = require('./classes/OffersNotifier');
-const { DEBUG_ENABLED, DEV_MODE } = require('./common/context');
+const { DEBUG_ENABLED } = require('./common/context');
 
 const config = new ConfigProvider({
   configPath: path.join(__dirname, '../config/settings.json'),
@@ -54,10 +54,6 @@ client.registry
 
 client.on('ready', async() => {
   await client.setDataProvider(provider);
-
-  if (DEV_MODE) {
-    client.dataProvider.clearGlobal();
-  }
 
   client.notifier = new OffersNotifier(client);
   client.notifier.initialize();
