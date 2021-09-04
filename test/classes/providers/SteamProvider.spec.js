@@ -66,9 +66,9 @@ describe('Classes - Providers - SteamProvider', () => {
       beforeAll(() => {
         expectedOffer = {
           provider: provider.name,
-          game: 'Blackout Z: Slaughterhouse Edition',
-          url: 'https://store.steampowered.com/app/729660/',
-          id: '/app/729660/'
+          game: 'Battlefield 1 Shortcut Kit: Infantry Bundle',
+          url: 'https://store.steampowered.com/app/1314764/Battlefield_1_Shortcut_Kit_Infantry_Bundle/?snr=1_7_7_2300_150_1',
+          id: '1314764'
         };
       });
   

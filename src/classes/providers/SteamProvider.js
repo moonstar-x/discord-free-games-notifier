@@ -15,7 +15,7 @@ class SteamProvider extends AbstractProvider {
   }
 
   getData() {
-    return axios.get('https://steamdb.info/sales/', { headers: { 'user-agent': UA } })
+    return axios.get('https://store.steampowered.com/search/?maxprice=free&specials=1', { headers: { 'user-agent': UA } })
       .then((res) => {
         return res.data;
       })
@@ -32,15 +32,15 @@ class SteamProvider extends AbstractProvider {
     return this.getData()
       .then((html) => {
         const $ = cheerio.load(html);
-
-        const games = $('span').filter((_, node) => {
-          return node.attribs.class && node.attribs.class.includes('sales-free-to-keep');
-        }).map((_, node) => node.parent.parent);
+        const games = $('#search_resultsRows').children();
 
         const offers = [];
         games.each((_, node) => {
-          const a = node.children[1];
-          offers.push(AbstractProvider.createOffer(this.name, a.children[0].data, `https://store.steampowered.com${a.attribs.href}`, a.attribs.href));
+          const name = node.children[3].children[1].children[1].children[0].data;
+          const url = node.attribs.href;
+          const id = node.attribs['data-ds-appid'];
+
+          offers.push(AbstractProvider.createOffer(this.name, name, url, id));
         });
 
         this.cache.set(offers);
