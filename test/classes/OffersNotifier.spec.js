@@ -31,6 +31,8 @@ describe('Classes - OffersNotifier', () => {
     clientMock.dataProvider.clearGlobal.mockClear();
     clientMock.dataProvider.setGlobal.mockClear();
     clientMock.dataProvider.getGlobal.mockClear();
+
+    clientMock.dataProvider.getGlobal.mockResolvedValue([]);
   });
 
   describe('initialize()', () => {
@@ -161,7 +163,7 @@ describe('Classes - OffersNotifier', () => {
 
   describe('notifySingleOffer()', () => {
     it('should resolve false if the offer is already notified.', () => {
-      clientMock.dataProvider.getGlobal.mockResolvedValue(true);
+      jest.spyOn(notifier.cache, 'isOfferCached').mockResolvedValue(true);
 
       return notifier.notifySingleOffer(offerMock, [channelMock])
         .then((result) => {
@@ -170,7 +172,7 @@ describe('Classes - OffersNotifier', () => {
     });
 
     it('should skip the notification if offer is already notified.', () => {
-      clientMock.dataProvider.getGlobal.mockResolvedValue(true);
+      jest.spyOn(notifier.cache, 'isOfferCached').mockResolvedValue(true);
 
       return notifier.notifySingleOffer(offerMock, [channelMock])
         .then(() => {
@@ -179,7 +181,7 @@ describe('Classes - OffersNotifier', () => {
     });
 
     it('should send a notification for the offer.', () => {
-      clientMock.dataProvider.getGlobal.mockResolvedValue(false);
+      jest.spyOn(notifier.cache, 'isOfferCached').mockResolvedValue(false);
 
       return notifier.notifySingleOffer(offerMock, [channelMock])
         .then(() => {
@@ -191,7 +193,7 @@ describe('Classes - OffersNotifier', () => {
     it('should log an error if channel.send rejects.', () => {
       const expectedError = new Error('Oops');
 
-      clientMock.dataProvider.getGlobal.mockResolvedValue(false);
+      jest.spyOn(notifier.cache, 'isOfferCached').mockResolvedValue(false);
       channelMock.send.mockRejectedValueOnce(expectedError);
 
       return notifier.notifySingleOffer(offerMock, [channelMock])
@@ -199,18 +201,6 @@ describe('Classes - OffersNotifier', () => {
           expect(logger.error).toHaveBeenCalled();
           expect(logger.error).toHaveBeenCalledWith(expectedError);
           expect(logger.error.mock.calls[0][0]).toContain('Something happened');
-        });
-    });
-  });
-
-  describe('updateNotifiedCache()', () => {
-    it('should update the offers saved in the db.', () => {
-      return notifier.updateNotifiedCache([offerMock, offerMock, offerMock])
-        .then(() => {
-          expect(clientMock.dataProvider.clearGlobal).toHaveBeenCalledTimes(1);
-
-          expect(clientMock.dataProvider.setGlobal).toHaveBeenCalledTimes(3);
-          expect(clientMock.dataProvider.setGlobal).toHaveBeenCalledWith(`notified-${offerMock.id}`, true);
         });
     });
   });

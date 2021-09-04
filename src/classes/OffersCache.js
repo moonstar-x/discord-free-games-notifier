@@ -7,7 +7,7 @@ class OffersCache {
   }
 
   async isOfferCached(offer) {
-    const cachedOffers = await this.dataProvider.getGlobal(`notified`, []);
+    const cachedOffers = await this.dataProvider.getGlobal('notified', []);
 
     return cachedOffers.some((o) => o.id === offer.id);
   }
