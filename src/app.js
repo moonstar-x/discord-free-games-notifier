@@ -1,68 +1,52 @@
 const path = require('path');
-const logger = require('@greencoast/logger');
-const ExtendedClient = require('./classes/extensions/ExtendedClient');
-const { discordToken, ownerID, prefix, inviteURL } = require('./common/settings');
-const { isDebugEnabled } = require('./common/context');
-const { connectDatabase } = require('./db');
+const { ExtendedClient, ConfigProvider } = require('@greencoast/discord.js-extended');
 
-const client = new ExtendedClient({
-  commandPrefix: prefix,
-  owner: ownerID,
-  invite: inviteURL
+const config = new ConfigProvider({
+  configPath: path.join(__dirname, '../config/settings.json'),
+  env: process.env,
+  default: {
+    PREFIX: '$',
+    OWNER_ID: null,
+    OWNER_REPORTING: false,
+    PRESENCE_REFRESH_INTERVAL: 15 * 60 * 1000 // 15 Minutes
+  },
+  types: {
+    TOKEN: 'string',
+    PREFIX: 'string',
+    OWNER_ID: ['string', 'null'],
+    OWNER_REPORTING: 'boolean',
+    PRESENCE_REFRESH_INTERVAL: ['number', 'null']
+  }
 });
 
+const client = new ExtendedClient({
+  config,
+  debug: process.argv.includes('--debug'),
+  errorOwnerReporting: config.get('OWNER_REPORTING'),
+  owner: config.get('OWNER_ID'),
+  prefix: config.get('PREFIX'),
+  presence: {
+    refreshInterval: config.get('PRESENCE_REFRESH_INTERVAL'),
+    templates: [
+      `{num_guilds} servers!`,
+      `{prefix}help for help.`,
+      `{num_members} users!`,
+      `up for {uptime}.`
+    ]
+  }
+});
+
+client
+  .registerDefaultEvents()
+  .registerExtraDefaultEvents();
+
 client.registry
-  .registerDefaultTypes()
   .registerGroups([
     ['misc', 'Miscellaneous Commands'],
     ['config', 'Configuration Commands']
-    // ['owner-only', 'Owner-Only Commands']
   ])
-  .registerCommandsIn(path.join(__dirname, 'commands'));
+  .registerCommandsIn(path.join(__dirname, './commands'));
 
-if (isDebugEnabled) {
-  client.on('debug', (info) => {
-    logger.debug(info);
-  });
-}
+// TODO: Initialize notifier.
 
-client.on('error', (error) => {
-  logger.error(error);
-});
-
-client.on('guildCreate', (guild) => {
-  logger.info(`Joined ${guild.name} guild!`);
-  client.updatePresence();
-});
-
-client.on('guildDelete', (guild) => {
-  logger.info(`Left ${guild.name} guild!`);
-  client.updatePresence();
-});
-
-client.on('guildUnavailable', (guild) => {
-  logger.warn(`Guild ${guild.name} is currently unavailable!`);
-});
-
-client.on('invalidated', () => {
-  logger.error('Client connection invalidated, terminating execution with code 1.');
-  process.exit(1);
-});
-
-client.on('rateLimit', (info) => {
-  logger.warn(info);
-});
-
-client.on('ready', () => {
-  logger.info('Connected to Discord! - Ready.');
-  connectDatabase(client)
-    .then(() => {
-      client.initializeNotifyJob();
-    });
-});
-
-client.on('warn', (info) => {
-  logger.warn(info);
-});
-
-client.login(discordToken);
+client.login(config.get('TOKEN'));
