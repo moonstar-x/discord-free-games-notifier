@@ -1,6 +1,6 @@
 {
   "name": "Discord free games notifier",
-  "description": "tmp",
+  "description": "A Discord bot that will notify when free games on Steam or Epic Games come out. The bot will fetch offers from Steam and Epic Games every 30 minutes and will send a notification message to the set channel once a new offer is found.",
   "repository": "https://github.com/Taknok/discord-free-games-notifier",
   "env": {
     "DISCORD_TOKEN": {
