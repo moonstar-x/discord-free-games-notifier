@@ -1,0 +1,29 @@
+{
+  "name": "Discord free games notifier",
+  "description": "tmp",
+  "repository": "https://github.com/Taknok/discord-free-games-notifier",
+  "env": {
+    "DISCORD_TOKEN": {
+      "required": true,
+      "description": "(string) The bot's token."
+    },
+    "DISCORD_PREFIX": {
+      "required": false,
+      "description": "(string) The bot's prefix. Used for the commands.",
+      "value": "$"
+    },
+    "DISCORD_OWNER_ID": {
+      "required": false,
+      "description": "(string) The ID of the bot's owner."
+    },
+    "DISCORD_OWNER_REPORTING": {
+      "required": false,
+      "description": "(bool) Whether the bot should send error reports to the owner via DM when a command errors.",
+      "value": false
+    },
+    "DISCORD_PRESENCE_REFRESH_INTERVAL": {
+      "required": false,
+      "description": "(int) The time interval in ms in which the bot updates its presence. If set to null the presence auto update will be disabled."
+    }
+  }
+}

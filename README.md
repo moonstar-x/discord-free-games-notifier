@@ -3,6 +3,7 @@
 [![open-issues-count](https://img.shields.io/github/issues-raw/moonstar-x/discord-free-games-notifier?logo=github)](https://github.com/moonstar-x/discord-free-games-notifier)
 [![docker-image-size](https://img.shields.io/docker/image-size/moonstarx/discord-free-games-notifier?logo=docker)](https://hub.docker.com/repository/docker/moonstarx/discord-free-games-notifier)
 [![docker-pulls](https://img.shields.io/docker/pulls/moonstarx/discord-free-games-notifier?logo=docker)](https://hub.docker.com/repository/docker/moonstarx/discord-free-games-notifier)
+[![Deploy](https://img.shields.io/badge/%E2%86%91_Deploy_to-Heroku-7056bf.svg)](https://heroku.com/deploy)
 
 # Discord Free Games Notifier
 
