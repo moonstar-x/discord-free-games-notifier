@@ -3,6 +3,7 @@ const { ExtendedClient, ConfigProvider } = require('@greencoast/discord.js-exten
 const LevelDataProvider = require('@greencoast/discord.js-extended/dist/providers/LevelDataProvider').default;
 const OffersNotifier = require('./classes/OffersNotifier');
 const { DEBUG_ENABLED } = require('./common/context');
+const PostgresDataProvider = require('./classes/providers/PostgresDataProvider')
 
 const config = new ConfigProvider({
   configPath: path.join(__dirname, '../config/settings.json'),
@@ -39,7 +40,9 @@ const client = new ExtendedClient({
   }
 });
 
-const provider = new LevelDataProvider(client, path.join(__dirname, '../data'));
+const provider = process.env.USE_PG ?
+  new PostgresDataProvider(client, process.env.DATABASE_URL) :
+  new LevelDataProvider(client, path.join(__dirname, '../data'));
 
 client
   .registerDefaultEvents()

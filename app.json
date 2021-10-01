@@ -24,6 +24,17 @@
     "DISCORD_PRESENCE_REFRESH_INTERVAL": {
       "required": false,
       "description": "(int) The time interval in ms in which the bot updates its presence. If set to null the presence auto update will be disabled."
+    },
+    "USE_PG": {
+      "required": true,
+      "description": "Use the heroku postgresql",
+      "value": true
     }
-  }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql:hobby-dev",
+      "as": "DATABASE" 
+    }
+  ]
 }
