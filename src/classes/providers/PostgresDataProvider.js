@@ -81,7 +81,7 @@ class PostgresDataProvider extends DataProvider {
     const { id } = guild;
 
     try {
-      let res = await this.pg.query(format('SELECT %I FROM guilds WHERE guild_id = %L', key, guild));
+      let res = await this.pg.query(format('SELECT %I FROM guilds WHERE guild_id = %L', key, id));
       // if not result
       if (res.rowCount == 0) {
         return defaultValue;
@@ -210,7 +210,7 @@ class PostgresDataProvider extends DataProvider {
 
     await this.pg.query(format(
       'DELETE FROM guilds WHERE guild_id = %I',
-      guild
+      id
     ));
   }
 

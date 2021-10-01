@@ -19,7 +19,7 @@
     "DISCORD_OWNER_REPORTING": {
       "required": false,
       "description": "(bool) Whether the bot should send error reports to the owner via DM when a command errors.",
-      "value": false
+      "value": "false"
     },
     "DISCORD_PRESENCE_REFRESH_INTERVAL": {
       "required": false,
@@ -27,8 +27,8 @@
     },
     "USE_PG": {
       "required": true,
-      "description": "Use the heroku postgresql",
-      "value": true
+      "description": "(bool) Use the heroku postgresql",
+      "value": "true"
     }
   },
   "addons": [
@@ -36,5 +36,15 @@
       "plan": "heroku-postgresql:hobby-dev",
       "as": "DATABASE" 
     }
-  ]
+  ],
+  "formation": {
+    "web": {
+      "quantity": 0,
+      "size": "free"
+    },
+    "worker": {
+      "quantity": 1,
+      "size": "free"
+    }
+  }
 }
