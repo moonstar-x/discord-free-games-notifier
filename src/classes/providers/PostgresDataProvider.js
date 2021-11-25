@@ -77,7 +77,7 @@ class PostgresDataProvider extends DataProvider {
     });
   }
 
-  async #get(guild, key, defaultValue) {
+  async _get(guild, key, defaultValue) {
     const { id } = guild;
 
     try {
@@ -119,7 +119,7 @@ class PostgresDataProvider extends DataProvider {
    * @returns A promise that resolves the queried data.
    */
   async get(guild, key, defaultValue) {
-    return await this.#get(guild, key, defaultValue);
+    return await this._get(guild, key, defaultValue);
   }
 
   /**
@@ -129,10 +129,10 @@ class PostgresDataProvider extends DataProvider {
    * @returns A promise that resolves the queried data.
    */
   async getGlobal(key, defaultValue) {
-    return this.#get(GLOBAL_KEY, key, defaultValue);
+    return this._get(GLOBAL_KEY, key, defaultValue);
   }
 
-  async #set(guild, key, value) {
+  async _set(guild, key, value) {
     const { id } = guild;
     logger.debug("Set value:", value);
 
@@ -167,7 +167,7 @@ class PostgresDataProvider extends DataProvider {
    * @returns A promise that resolves once the data is saved.
    */
   async set(guild, key, value) {
-    return await this.#set(guild, key, value);
+    return await this._set(guild, key, value);
   }
 
   /**
@@ -177,11 +177,11 @@ class PostgresDataProvider extends DataProvider {
    * @returns A promise that resolves once the data is saved.
    */
   async setGlobal(key, value) {
-    return await this.#set(GLOBAL_KEY, key, value);
+    return await this._set(GLOBAL_KEY, key, value);
   }
 
-  async #delete(guidl, key) {
-    return await this.#set(guild, key, null);
+  async _delete(guidl, key) {
+    return await this._set(guild, key, null);
   }
 
   /**
@@ -191,7 +191,7 @@ class PostgresDataProvider extends DataProvider {
    * @returns A promise that resolves the data that was deleted.
    */
   async delete(guild, key) {
-    return await this.#delete(guild, key, null);
+    return await this._delete(guild, key, null);
   }
 
   /**
@@ -200,12 +200,12 @@ class PostgresDataProvider extends DataProvider {
    * @returns A promise that resolves the data that was deleted.
    */
   async deleteGlobal(key) {
-    return await this.#delete(GLOBAL_KEY, key);
+    return await this._delete(GLOBAL_KEY, key);
     // TODO: EVENT ? dans set & get aussi
   }
 
 
-  async #clear(guild) {
+  async _clear(guild) {
     const { id } = guild;
 
     await this.pg.query(format(
@@ -221,7 +221,7 @@ class PostgresDataProvider extends DataProvider {
    * @emits `client#dataProviderClear`
    */
   async clear(guild) {
-    await this.#clear(guild);
+    await this._clear(guild);
     this.client.emit('dataProviderClear', guild);
   }
 
@@ -231,7 +231,7 @@ class PostgresDataProvider extends DataProvider {
    * @emits `client#dataProviderClear`
    */
   async clearGlobal() {
-    await this.#clear(GLOBAL_KEY);
+    await this._clear(GLOBAL_KEY);
     this.client.emit('dataProviderClear', null);
   }
 }

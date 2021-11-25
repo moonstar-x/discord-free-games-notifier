@@ -3,7 +3,7 @@ const { ExtendedClient, ConfigProvider } = require('@greencoast/discord.js-exten
 const LevelDataProvider = require('@greencoast/discord.js-extended/dist/providers/LevelDataProvider').default;
 const OffersNotifier = require('./classes/OffersNotifier');
 const { DEBUG_ENABLED } = require('./common/context');
-const PostgresDataProvider = require('./classes/providers/PostgresDataProvider')
+const PostgresDataProvider = require('./classes/providers/PostgresDataProvider');
 
 const config = new ConfigProvider({
   configPath: path.join(__dirname, '../config/settings.json'),
