@@ -12,6 +12,11 @@ jest.spyOn(Date, 'now').mockReturnValue(1000);
 const mockedGame = {
   title: 'game',
   productSlug: 'slug',
+  price: {
+    totalPrice: {
+      discountPrice: 0
+    }
+  },
   promotions: {
     promotionalOffers: [
       '1 promotion'

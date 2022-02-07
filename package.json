@@ -1,6 +1,6 @@
 {
   "name": "discord-free-games-notifier",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A Discord bot that will notify when free games on Steam or Epic Games come out.",
   "main": "./src/app.js",
   "scripts": {
