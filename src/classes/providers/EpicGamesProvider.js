@@ -33,13 +33,14 @@ class EpicGamesProvider extends AbstractProvider {
           if (game.promotions && game.promotions.promotionalOffers &&
               game.promotions.promotionalOffers.length > 0 &&
               game.price.totalPrice.discountPrice === 0) {
-            let url = `https://epicgames.com/store/product/${game.productSlug}`;
+            const pageSlugg = game.offerMappings.find(pageSlug => pageSlug).pageSlug
+            let url = `https://epicgames.com/store/product/${pageSlugg}`;
 
             if (!url.endsWith('/home')) {
               url += '/home';
             }
 
-            offers.push(AbstractProvider.createOffer(this.name, game.title, url, game.productSlug));
+            offers.push(AbstractProvider.createOffer(this.name, game.title, url, pageSlugg));
           }
           return offers;
         }, []);
