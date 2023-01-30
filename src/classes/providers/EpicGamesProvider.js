@@ -33,7 +33,7 @@ class EpicGamesProvider extends AbstractProvider {
           if (game.promotions && game.promotions.promotionalOffers &&
               game.promotions.promotionalOffers.length > 0 &&
               game.price.totalPrice.discountPrice === 0) {
-            const pageSlugg = game.offerMappings.find(pageSlug => pageSlug).pageSlug
+            const pageSlugg = game.catalogNs.mappings.find(pageSlug => pageSlug).pageSlug
             let url = `https://epicgames.com/store/product/${pageSlugg}`;
 
             if (!url.endsWith('/home')) {
