@@ -1,7 +1,0 @@
-{
-  "token": "YOUR_DISCORD_TOKEN",
-  "prefix": "!",
-  "owner_id": "YOUR_USER_ID",
-  "owner_reporting": false,
-  "presence_refresh_interval": 900000
-}
