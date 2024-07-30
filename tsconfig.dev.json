@@ -1,0 +1,17 @@
+{
+  "include": ["src/**/*", "__mocks__/**/*"],
+  "exclude": [
+    "build",
+    "node_modules",
+  ],
+
+  "extends": "./tsconfig.base.json",
+
+  "files": [
+    "src/app.ts",
+    "src/global.d.ts"
+  ],
+  "ts-node": {
+    "files": true
+  }
+}
