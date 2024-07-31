@@ -2,5 +2,8 @@
   "extends": [
     "@moonstar-x/eslint-config/rules/node",
     "@moonstar-x/eslint-config/rules/typescript"
-  ]
+  ],
+  "rules": {
+    "no-dupe-class-members": "off"
+  }
 }
