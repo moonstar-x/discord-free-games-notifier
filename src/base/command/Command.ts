@@ -1,12 +1,12 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionResolvable, DMChannel, PermissionsBitField } from 'discord.js';
 import { ExtendedClient } from '../client/ExtendedClient';
 
-// TODO: Implement guildOnly
-// TODO: Implement permissions.
 export interface CommandOptions {
   name: string
   description: string
   emoji?: string
+  guildOnly: boolean
+  permissions?: PermissionResolvable | null
   builder: SlashCommandBuilder
 }
 
@@ -16,6 +16,8 @@ export abstract class Command {
   public readonly name: string;
   public readonly description: string;
   public readonly emoji: string;
+  public readonly guildOnly: boolean;
+  public readonly permissions: PermissionResolvable | null;
   public readonly builder: SlashCommandBuilder;
 
   protected constructor(client: ExtendedClient, options: CommandOptions) {
@@ -24,6 +26,8 @@ export abstract class Command {
     this.name = options.name;
     this.description = options.description;
     this.emoji = options.emoji || ':robot:';
+    this.guildOnly = options.guildOnly;
+    this.permissions = options.permissions ?? null;
     this.builder = options.builder
       .setName(this.name)
       .setDescription(this.description);
@@ -42,5 +46,26 @@ export abstract class Command {
     }
 
     await interaction.reply({ content: message });
+  }
+
+  public hasPermission(interaction: ChatInputCommandInteraction): boolean | string {
+    if (!this.permissions || !interaction.channel) {
+      return true;
+    }
+
+    if (interaction.channel instanceof DMChannel || interaction.channel.partial) {
+      return true;
+    }
+
+    const missingPermissions = interaction.channel.permissionsFor(interaction.user.id)?.missing(PermissionsBitField.resolve(this.permissions));
+    if (!missingPermissions?.length) {
+      return true;
+    }
+
+    if (missingPermissions.length === 1) {
+      return `The command ${this.name} requires you to have the ${missingPermissions[0]} permission.`;
+    }
+
+    return `The command ${this.name} requires you to have the ${missingPermissions.join(', ')} permissions.`;
   }
 }
