@@ -38,7 +38,7 @@ export abstract class Command {
   public async onError(error: unknown, interaction: ChatInputCommandInteraction): Promise<void> {
     this.client.emit('commandError', error, this, interaction);
 
-    const message = `An error has occurred when running the command ${this.name}`;
+    const message = `An error has occurred when running the command ${this.name}.`;
 
     if (interaction.deferred || interaction.replied) {
       await interaction.editReply({ content: message });
@@ -62,10 +62,6 @@ export abstract class Command {
       return true;
     }
 
-    if (missingPermissions.length === 1) {
-      return `The command ${this.name} requires you to have the ${missingPermissions[0]} permission.`;
-    }
-
-    return `The command ${this.name} requires you to have the ${missingPermissions.join(', ')} permissions.`;
+    return `The command ${this.name} requires you to have the permissions: ${missingPermissions.join(', ')}.`;
   }
 }

@@ -11,12 +11,12 @@ export const handleError = (error: Error) => {
 };
 
 export const handleGuildCreate = (guild: Guild) => {
-  logger.info(`Joined guild ${guild.name}`);
+  logger.info(`Joined guild ${guild.name}.`);
 };
 
 // TODO: Delete guild data in database.
 export const handleGuildDelete = (guild: Guild) => {
-  logger.info(`Left guild ${guild.name}`);
+  logger.info(`Left guild ${guild.name}.`);
 };
 
 export const handleGuildUnavailable = (guild: Guild) => {
@@ -24,7 +24,7 @@ export const handleGuildUnavailable = (guild: Guild) => {
 };
 
 export const handleReady = () => {
-  logger.info('Ready!');
+  logger.info('Connected to Discord - Ready!');
 };
 
 export const handleWarn = (info: string) => {
@@ -35,17 +35,17 @@ export const handleCommandExecute = (command: Command, interaction: ChatInputCom
   const author = interaction.member instanceof GuildMember ? interaction.member.displayName : interaction.user.displayName;
   const guild = interaction.guild?.name || 'Unknown Guild or DM';
 
-  logger.info(`User ${author} issued command ${command.name} in ${guild}`);
+  logger.info(`User ${author} issued command ${command.name} in ${guild}.`);
 };
 
 export const handleCommandError = (error: unknown, command: Command, interaction: ChatInputCommandInteraction) => {
   const guild = interaction.guild?.name || 'Unknown Guild or DM';
 
   logger.error(`Something happened when executing ${command.name} in ${guild}.`);
-  logger.error(`Command interaction has ID of ${interaction.id}`);
+  logger.error(`Command interaction has an ID of ${interaction.id}.`);
   logger.error(error);
 };
 
 export const handleCommandRegistered = (command: Command) => {
-  logger.info(`Registered command: ${command.name}`);
+  logger.info(`Registered command: ${command.name}.`);
 };

@@ -16,18 +16,6 @@ export class CommandRegistry {
     this.commands = new Collection();
   }
 
-  public get(name: string): Command | undefined {
-    return this.commands.get(name);
-  }
-
-  public getAll(): Command[] {
-    return Array.from(this.commands.values());
-  }
-
-  public size(): number {
-    return this.commands.size;
-  }
-
   public register(command: Command): this;
   public register(commands: Command[]): this;
   public register(command: Command | Command[]): this {
@@ -38,6 +26,18 @@ export class CommandRegistry {
     }
 
     return this;
+  }
+
+  public get(name: string): Command | undefined {
+    return this.commands.get(name);
+  }
+
+  public getAll(): Command[] {
+    return Array.from(this.commands.values());
+  }
+
+  public size(): number {
+    return this.commands.size;
   }
 
   public registerIn(path: string): this {

@@ -8,16 +8,19 @@ describe('Config > App', () => {
     DISCORD_TOKEN: 'token'
   };
 
-  beforeAll(() => {
-    process.env = mockedEnv;
+  const resetModule = () => {
     jest.resetModules();
     config = require('./app');
+  };
+
+  beforeAll(() => {
+    process.env = mockedEnv;
+    resetModule();
   });
 
   afterAll(() => {
     process.env = oldEnv;
-    jest.resetModules();
-    config = require('./app');
+    resetModule();
   });
 
   it('should export valid DISCORD_TOKEN.', () => {

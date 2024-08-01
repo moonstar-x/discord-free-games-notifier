@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, PermissionsBitField, SlashCommandBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, PermissionFlagsBits, SlashCommandBuilder } from 'discord.js';
 import { Command } from '../../base/command/Command';
 import { ExtendedClient } from '../../base/client/ExtendedClient';
 
@@ -8,7 +8,7 @@ export default class TestCommand extends Command {
       name: 'test',
       description: 'Test',
       guildOnly: true,
-      permissions: [PermissionsBitField.Flags.ManageChannels] as const,
+      permissions: [PermissionFlagsBits.ManageChannels] as const,
       builder: new SlashCommandBuilder()
     });
   }
