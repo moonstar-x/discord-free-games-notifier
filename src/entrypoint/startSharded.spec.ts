@@ -1,6 +1,7 @@
 import { ShardingManager } from 'discord.js';
 import EventEmitter from 'events';
 import logger from '@moonstar-x/logger';
+import { runMigrations } from '../app/migration';
 
 const manager = new EventEmitter() as unknown as ShardingManager;
 manager.spawn = jest.fn();
@@ -8,6 +9,12 @@ manager.spawn = jest.fn();
 jest.mock('../config/app', () => {
   return {
     DISCORD_TOKEN: 'token'
+  };
+});
+
+jest.mock('../app/migration', () => {
+  return {
+    runMigrations: jest.fn().mockImplementation(() => Promise.resolve())
   };
 });
 
@@ -29,6 +36,11 @@ describe('Entrypoint > Start Sharded', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+  });
+
+  it('should call migrations.', async () => {
+    await load();
+    expect(runMigrations).toHaveBeenCalled();
   });
 
   it('should spawn manager.', async () => {
