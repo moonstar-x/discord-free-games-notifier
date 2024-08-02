@@ -1,0 +1,31 @@
+name: dev-discord-free-games-notifier
+
+services:
+  crawler:
+    image: ghcr.io/moonstar-x/free-games-crawler:latest
+    restart: no
+    depends_on:
+      - redis
+    environment:
+      REDIS_URI: redis://redis:6379
+
+  redis:
+    image: redis:7.4-rc2-alpine
+    restart: no
+    command: redis-server --save 60 1 --loglevel warning
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis:/data
+
+  postgres:
+    image: postgres:15-alpine
+    restart: no
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: dev
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: password
