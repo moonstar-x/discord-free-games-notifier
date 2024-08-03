@@ -4,6 +4,7 @@
     "@moonstar-x/eslint-config/rules/typescript"
   ],
   "rules": {
-    "no-dupe-class-members": "off"
+    "no-dupe-class-members": "off",
+    "camelcase": "off"
   }
 }
