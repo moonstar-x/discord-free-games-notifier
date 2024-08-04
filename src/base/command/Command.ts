@@ -1,4 +1,4 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionResolvable, DMChannel, PermissionsBitField } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, PermissionResolvable, DMChannel, PermissionsBitField, SlashCommandOptionsOnlyBuilder } from 'discord.js';
 import { ExtendedClient } from '../client/ExtendedClient';
 
 export interface CommandOptions {
@@ -7,7 +7,7 @@ export interface CommandOptions {
   emoji?: string
   guildOnly: boolean
   permissions?: PermissionResolvable | null
-  builder: SlashCommandBuilder
+  builder: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder
 }
 
 export abstract class Command {
@@ -18,7 +18,7 @@ export abstract class Command {
   public readonly emoji: string;
   public readonly guildOnly: boolean;
   public readonly permissions: PermissionResolvable | null;
-  public readonly builder: SlashCommandBuilder;
+  public readonly builder: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
 
   protected constructor(client: ExtendedClient, options: CommandOptions) {
     this.client = client;
