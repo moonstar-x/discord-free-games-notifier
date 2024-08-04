@@ -12,3 +12,15 @@ export interface GameOffer {
   original_price_fmt: string | null
   thumbnail: string | null
 }
+
+export interface GameOfferGuild {
+  guild: string
+  channel: string | null
+  created_at: string
+  updated_at: string
+  storefronts: {
+    [k: string]: {
+      enabled: boolean
+    }
+  }
+}

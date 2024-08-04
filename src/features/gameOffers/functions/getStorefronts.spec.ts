@@ -22,4 +22,11 @@ describe('Features > GameOffers > Functions > GetStorefronts', () => {
     const result = await getStorefronts();
     expect(result).toBe(storefronts);
   });
+
+  it('should return empty array if not found result.', async () => {
+    (db.one as jest.Mock).mockResolvedValueOnce({ result: null });
+    const result = await getStorefronts();
+
+    expect(result).toStrictEqual([]);
+  });
 });

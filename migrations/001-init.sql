@@ -54,12 +54,12 @@ BEGIN
             'created_at', GS.created_at,
             'updated_at', GS.updated_at,
             'storefronts', (
-                SELECT json_object_agg(
+                SELECT COALESCE(json_object_agg(
                     GOS.name,
                     json_build_object(
                         'enabled', COALESCE(GGOE.enabled, true)
                     )
-                )
+                ), '{}'::json)
                 FROM (
                     SELECT GOS.id, GOS.name FROM GameOfferStorefront GOS
                         LEFT JOIN GuildGameOffersEnabled GGOE ON GOS.id = GGOE.storefront_id AND GGOE.guild = guild_id
