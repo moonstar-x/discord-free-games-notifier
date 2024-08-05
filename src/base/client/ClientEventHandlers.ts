@@ -1,6 +1,7 @@
 import { ChatInputCommandInteraction, Guild, GuildMember } from 'discord.js';
 import logger from '@moonstar-x/logger';
 import { Command } from '../command/Command';
+import { deleteGuild } from '../../features/gameOffers/functions/deleteGuild';
 
 export const handleDebug = (info: string) => {
   logger.debug(info);
@@ -14,9 +15,16 @@ export const handleGuildCreate = (guild: Guild) => {
   logger.info(`Joined guild ${guild.name}.`);
 };
 
-// TODO: Delete guild data in database.
-export const handleGuildDelete = (guild: Guild) => {
+export const handleGuildDelete = async (guild: Guild) => {
   logger.info(`Left guild ${guild.name}.`);
+
+  try {
+    await deleteGuild(guild.id);
+    logger.info(`Deleted guild data for ${guild.name}.`);
+  } catch (error) {
+    logger.error(`Could not delete guild data for ${guild.name}.`);
+    logger.error(error);
+  }
 };
 
 export const handleGuildUnavailable = (guild: Guild) => {

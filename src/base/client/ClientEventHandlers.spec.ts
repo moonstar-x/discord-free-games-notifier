@@ -2,8 +2,15 @@ import * as ClientEventHandlers from './ClientEventHandlers';
 import logger from '@moonstar-x/logger';
 import { ChatInputCommandInteraction, Guild, GuildMember, User } from 'discord.js';
 import { Command } from '../command/Command';
+import { deleteGuild } from '../../features/gameOffers/functions/deleteGuild';
 
 jest.mock('@moonstar-x/logger');
+
+jest.mock('../../features/gameOffers/functions/deleteGuild', () => {
+  return {
+    deleteGuild: jest.fn().mockImplementation(() => Promise.resolve())
+  };
+});
 
 describe('Base > Client > ClientEventHandlers', () => {
   beforeEach(() => {
@@ -50,15 +57,35 @@ describe('Base > Client > ClientEventHandlers', () => {
   });
 
   describe('ClientEventHandlers.handleGuildDelete()', () => {
-    const guild = { name: 'Guild' } as Guild;
+    const guild = { name: 'Guild', id: '123' } as Guild;
 
     it('should be defined.', () => {
       expect(ClientEventHandlers.handleGuildDelete).toBeDefined();
     });
 
-    it('should log guild leave.', () => {
-      ClientEventHandlers.handleGuildDelete(guild);
+    it('should log guild leave.', async () => {
+      await ClientEventHandlers.handleGuildDelete(guild);
       expect(logger.info).toHaveBeenCalledWith('Left guild Guild.');
+    });
+
+    it('should delete guild data.', async () => {
+      await ClientEventHandlers.handleGuildDelete(guild);
+      expect(deleteGuild).toHaveBeenCalledWith('123');
+    });
+
+    it('should log guild data delete.', async () => {
+      await ClientEventHandlers.handleGuildDelete(guild);
+      expect(logger.info).toHaveBeenCalledWith('Deleted guild data for Guild.');
+    });
+
+
+    it('should error log if delete guild data fails.', async () => {
+      const error = new Error('Oops!');
+      (deleteGuild as jest.Mock).mockRejectedValueOnce(error);
+
+      await ClientEventHandlers.handleGuildDelete(guild);
+      expect(logger.error).toHaveBeenCalledWith('Could not delete guild data for Guild.');
+      expect(logger.error).toHaveBeenCalledWith(error);
     });
   });
 
