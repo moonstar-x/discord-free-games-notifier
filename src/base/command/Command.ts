@@ -1,16 +1,18 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder } from 'discord.js';
+import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
 import { ExtendedClient } from '../client/ExtendedClient';
+
+export type AnySlashCommandBuilder = SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
 
 export interface CommandOptions {
   name: string
-  builder: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder
+  builder: AnySlashCommandBuilder
 }
 
 export abstract class Command {
   public readonly client: ExtendedClient;
 
   public readonly name: string;
-  public readonly builder: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
+  public readonly builder: AnySlashCommandBuilder;
 
   protected constructor(client: ExtendedClient, options: CommandOptions) {
     this.client = client;
