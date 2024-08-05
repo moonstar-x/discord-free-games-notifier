@@ -20,11 +20,17 @@ describe('Base > Command > CommandRegistry', () => {
 
     const command = {
       name: 'command',
-      description: 'A little description.'
+      builder: {
+        name: 'command',
+        description: 'A little description.'
+      }
     } as Command;
     const command2 = {
       name: 'cmd',
-      description: 'A little description.'
+      builder: {
+        name: 'cmd',
+        description: 'A little description.'
+      }
     } as Command;
 
     beforeEach(() => {

@@ -24,18 +24,7 @@ export class CommandDispatcher {
       return;
     }
 
-    if (command.guildOnly && !interaction.inGuild()) {
-      await interaction.reply({ content: 'I can only run this from a server.' });
-      return;
-    }
-
     try {
-      const hasPermission = command.hasPermission(interaction);
-      if (typeof hasPermission === 'string') {
-        await interaction.reply({ content: hasPermission });
-        return;
-      }
-
       this.client.emit('commandExecute', command, interaction);
       await command.run(interaction);
     } catch (error) {

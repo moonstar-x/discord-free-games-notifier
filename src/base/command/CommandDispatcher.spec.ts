@@ -34,9 +34,7 @@ describe('Base > Command > CommandDispatcher', () => {
 
       const command = {
         name: 'command',
-        guildOnly: false,
         run: jest.fn(),
-        hasPermission: jest.fn().mockReturnValue(true),
         onError: jest.fn()
       } as unknown as Command;
 
@@ -60,25 +58,6 @@ describe('Base > Command > CommandDispatcher', () => {
         (client.registry.get as jest.Mock).mockReturnValueOnce(null);
         await dispatcher.handleInteraction(interaction);
 
-        expect(client.emit).not.toHaveBeenCalled();
-        expect(command.run).not.toHaveBeenCalled();
-      });
-
-      it('should reply interaction and not execute command if command is guildOnly and interaction was not sent in guild.', async () => {
-        (client.registry.get as jest.Mock).mockReturnValueOnce({ ...command, guildOnly: true });
-        (interaction.inGuild as unknown as jest.Mock).mockReturnValueOnce(false);
-        await dispatcher.handleInteraction(interaction);
-
-        expect(interaction.reply).toHaveBeenCalledWith({ content: 'I can only run this from a server.' });
-        expect(client.emit).not.toHaveBeenCalled();
-        expect(command.run).not.toHaveBeenCalled();
-      });
-
-      it('should reply interaction and not execute command if author has no permission to execute.', async () => {
-        (command.hasPermission as jest.Mock).mockReturnValueOnce('No permissions.');
-        await dispatcher.handleInteraction(interaction);
-
-        expect(interaction.reply).toHaveBeenCalledWith({ content: 'No permissions.' });
         expect(client.emit).not.toHaveBeenCalled();
         expect(command.run).not.toHaveBeenCalled();
       });

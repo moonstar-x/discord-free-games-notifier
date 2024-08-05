@@ -26,5 +26,6 @@ const validateDescription = (name: string, description: string) => {
 
 export const validateCommand = (command: Command) => {
   validateName(command.name);
-  validateDescription(command.name, command.description);
+  validateName(command.builder.name);
+  validateDescription(command.name, command.builder.description);
 };
