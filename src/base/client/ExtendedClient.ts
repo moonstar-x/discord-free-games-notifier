@@ -1,6 +1,6 @@
 import { Client, ClientOptions, ClientEvents, ChatInputCommandInteraction } from 'discord.js';
 import { CommandRegistry } from '../command/CommandRegistry';
-import { CommandDispatcher } from '../command/CommandDispatcher';
+import { InteractionDispatcher } from '../command/InteractionDispatcher';
 import { Command } from '../command/Command';
 
 export interface ExtendedClientEvents extends ClientEvents {
@@ -37,13 +37,13 @@ export declare interface ExtendedClient {
 
 export class ExtendedClient extends Client {
   public readonly registry: CommandRegistry;
-  public readonly dispatcher: CommandDispatcher;
+  public readonly dispatcher: InteractionDispatcher;
 
   public constructor(options: ClientOptions) {
     super(options);
 
     this.registry = new CommandRegistry(this);
-    this.dispatcher = new CommandDispatcher(this, this.registry);
+    this.dispatcher = new InteractionDispatcher(this, this.registry);
 
     this.registerBasicHandlers();
   }

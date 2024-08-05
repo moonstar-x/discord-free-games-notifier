@@ -1,9 +1,9 @@
 import { ExtendedClient } from './ExtendedClient';
 import { GatewayIntentBits, Interaction } from 'discord.js';
 
-jest.mock('../command/CommandDispatcher', () => {
+jest.mock('../command/InteractionDispatcher', () => {
   return {
-    CommandDispatcher: jest.fn().mockImplementation(() => {
+    InteractionDispatcher: jest.fn().mockImplementation(() => {
       return {
         handleInteraction: jest.fn()
       };

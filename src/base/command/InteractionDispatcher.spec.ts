@@ -1,4 +1,4 @@
-import { CommandDispatcher } from './CommandDispatcher';
+import { InteractionDispatcher } from './InteractionDispatcher';
 import { ChatInputCommandInteraction } from 'discord.js';
 import logger from '@moonstar-x/logger';
 import { ExtendedClient } from '../client/ExtendedClient';
@@ -6,12 +6,12 @@ import { Command } from './Command';
 
 jest.mock('@moonstar-x/logger');
 
-describe('Base > Command > CommandDispatcher', () => {
+describe('Base > Command > InteractionDispatcher', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  describe('class CommandDispatcher', () => {
+  describe('class InteractionDispatcher', () => {
     const client = {
       emit: jest.fn(),
       registry: {
@@ -20,11 +20,11 @@ describe('Base > Command > CommandDispatcher', () => {
     } as unknown as ExtendedClient;
 
     it('should be defined.', () => {
-      expect(CommandDispatcher).toBeDefined();
+      expect(InteractionDispatcher).toBeDefined();
     });
 
     describe('handleInteraction()', () => {
-      const dispatcher = new CommandDispatcher(client, client.registry);
+      const dispatcher = new InteractionDispatcher(client, client.registry);
 
       const interaction = {
         isChatInputCommand: jest.fn().mockReturnValue(true),

@@ -5,7 +5,7 @@ import { CommandRegistry } from './CommandRegistry';
 import { isChatInputCommand } from '../types/guards';
 
 
-export class CommandDispatcher {
+export class InteractionDispatcher {
   public readonly client: ExtendedClient;
   public readonly registry: CommandRegistry;
 
