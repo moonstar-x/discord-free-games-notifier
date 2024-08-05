@@ -1,4 +1,4 @@
-import { BaseInteraction } from 'discord.js';
+import { BaseInteraction, ChatInputCommandInteraction } from 'discord.js';
 import logger from '@moonstar-x/logger';
 import { ExtendedClient } from '../client/ExtendedClient';
 import { CommandRegistry } from './CommandRegistry';
@@ -14,11 +14,15 @@ export class InteractionDispatcher {
     this.registry = registry;
   }
 
-  public async handleInteraction(interaction: BaseInteraction): Promise<void> {
-    if (!isChatInputCommand(interaction)) {
-      return;
+  public handleInteraction(interaction: BaseInteraction): Promise<void> {
+    if (isChatInputCommand(interaction)) {
+      return this.handleChatInputCommand(interaction);
     }
 
+    return Promise.resolve();
+  }
+
+  private async handleChatInputCommand(interaction: ChatInputCommandInteraction): Promise<void> {
     const command = this.registry.get(interaction.commandName);
     if (!command) {
       return;
