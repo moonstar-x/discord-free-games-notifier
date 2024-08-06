@@ -43,7 +43,8 @@ describe('Base > Command > Command', () => {
       const error = new Error('Oops!');
       const interaction = {
         editReply: jest.fn(),
-        reply: jest.fn()
+        reply: jest.fn(),
+        locale: 'en-US'
       } as unknown as ChatInputCommandInteraction;
 
       it('should emit commandError with error.', async () => {

@@ -6,7 +6,7 @@ import { BaseInteraction } from 'discord.js';
 export type Locale = keyof typeof localeStrings | string;
 export type MessageKey = keyof typeof localeStrings['en-US'];
 
-export type LocaleMessageMap = Record<Locale, Record<MessageKey, string | undefined> | undefined>;
+export type LocaleMessageMap = Partial<Record<Locale, Partial<Record<MessageKey, string>>>>;
 
 export type TranslateFunctionValues = Record<string, PrimitiveType | FormatXMLElementFn<string, string | string[]>>;
 export type TranslateFunction = (locale: Locale, key: MessageKey, values?: TranslateFunctionValues) => string;

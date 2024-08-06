@@ -1,5 +1,6 @@
 import { ChatInputCommandInteraction, SlashCommandBuilder, SlashCommandOptionsOnlyBuilder, SlashCommandSubcommandsOnlyBuilder } from 'discord.js';
 import { ExtendedClient } from '../client/ExtendedClient';
+import { getInteractionTranslator } from '../../i18n/translate';
 
 export type AnySlashCommandBuilder = SlashCommandBuilder | SlashCommandOptionsOnlyBuilder | SlashCommandSubcommandsOnlyBuilder;
 
@@ -26,13 +27,13 @@ export abstract class Command {
   public async onError(error: unknown, interaction: ChatInputCommandInteraction): Promise<void> {
     this.client.emit('commandError', error, this, interaction);
 
-    const message = `An error has occurred when running the command ${this.name}.`;
+    const t = getInteractionTranslator(interaction);
 
     if (interaction.deferred || interaction.replied) {
-      await interaction.editReply({ content: message });
+      await interaction.editReply({ content: t('base.command.error.message', { name: this.name }) });
       return;
     }
 
-    await interaction.reply({ content: message });
+    await interaction.reply({ content: t('base.command.error.message', { name: this.name }) });
   }
 }
