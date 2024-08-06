@@ -1,4 +1,4 @@
-import { getInteractionTranslator, MessageKey, translate, translateAll } from './translate';
+import { getInteractionTranslator, MessageKey, translate, translateAll, translateDefault } from './translate';
 import { TranslatorError } from './error';
 import { BaseInteraction } from 'discord.js';
 
@@ -62,6 +62,31 @@ describe('i18n > Translate', () => {
       expect(result).toBe('Goodbye John');
     });
   });
+
+  describe('translateDefault()', () => {
+    it('should be defined.', () => {
+      expect(translateDefault).toBeDefined();
+    });
+
+    it('should throw TranslatorError if message does not exist in default locale.', () => {
+      const expectedError = new TranslatorError('No message with key what for locale en-US exists.');
+
+      expect(() => {
+        translateDefault('what' as MessageKey);
+      }).toThrow(expectedError);
+    });
+
+    it('should return expected message.', () => {
+      const result = translateDefault('hi' as MessageKey);
+      expect(result).toBe('Hello');
+    });
+
+    it('should return expected message with values inserted.', () => {
+      const result = translateDefault('bye' as MessageKey, { name: 'John' });
+      expect(result).toBe('Goodbye John');
+    });
+  });
+
 
   describe('getInteractionTranslator()', () => {
     const interaction = {

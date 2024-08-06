@@ -41,6 +41,10 @@ export const translate: TranslateFunction = (locale, key, values) => {
   return getMessage(locale, key, true).format(values as TranslateFunctionValues) as string;
 };
 
+export const translateDefault: LocalizedTranslateFunction = (key, values) => {
+  return getMessage(DEFAULT_LOCALE, key, false).format(values as TranslateFunctionValues) as string;
+};
+
 export const getInteractionTranslator = (interaction: BaseInteraction): LocalizedTranslateFunction => (key, values) => {
   return getMessage(interaction.locale, key, true).format(values as TranslateFunctionValues) as string;
 };

@@ -5,46 +5,41 @@ import { updateOrCreateGuildChannel } from '../features/gameOffers/functions/upd
 import { GuildChatInputCommandInteraction } from '../base/types/aliases';
 import { getStorefronts } from '../features/gameOffers/functions/getStorefronts';
 import { setGuildGameOfferEnabled } from '../features/gameOffers/functions/setGuildGameOfferEnabled';
+import { translateAll, translateDefault } from '../i18n/translate';
 
 export default class ConfigureCommand extends Command {
   public constructor(client: ExtendedClient) {
     super(client, {
       name: 'configure',
       builder: new SlashCommandBuilder()
-        .setName('configure')
-        .setNameLocalizations({
-          'en-US': 'configure',
-          'en-GB': 'configure',
-          'es-ES': 'configurar',
-          'es-419': 'configurar',
-          fr: 'configurer'
-        })
-        .setDescription('Change the configuration for this server.')
-        .setDescriptionLocalizations({
-          'en-US': 'Change the configuration for this server.',
-          'en-GB': 'Change the configuration for this server.',
-          'es-ES': 'Cambia la configuración para este servidor.',
-          'es-419': 'Cambia la configuración para este servidor.',
-          fr: 'Changez la configuration pour ce serveur.'
-        })
+        .setName(translateDefault('commands.configure.name'))
+        .setNameLocalizations(translateAll('commands.configure.name'))
+        .setDescription(translateDefault('commands.configure.description'))
+        .setDescriptionLocalizations(translateAll('commands.configure.description'))
         .setDMPermission(false)
         .setDefaultMemberPermissions(PermissionFlagsBits.ManageGuild)
         .addSubcommand((input) => {
           return input
-            .setName('channel')
-            .setDescription('Set the notifications channel.')
+            .setName(translateDefault('commands.configure.sub.channel.name'))
+            .setNameLocalizations(translateAll('commands.configure.sub.channel.name'))
+            .setDescription(translateDefault('commands.configure.sub.channel.description'))
+            .setDescriptionLocalizations(translateAll('commands.configure.sub.channel.description'))
             .addChannelOption((input) => {
               return input
-                .setName('channel')
-                .setDescription('The text channel to use.')
+                .setName(translateDefault('commands.configure.sub.channel.options.channel.name'))
+                .setNameLocalizations(translateAll('commands.configure.sub.channel.options.channel.name'))
+                .setDescription(translateDefault('commands.configure.sub.channel.options.channel.description'))
+                .setDescriptionLocalizations(translateAll('commands.configure.sub.channel.options.channel.description'))
                 .addChannelTypes(ChannelType.GuildText, ChannelType.GuildAnnouncement)
                 .setRequired(true);
             });
         })
         .addSubcommand((input) => {
           return input
-            .setName('storefronts')
-            .setDescription('Enable or disable notifications from specific Storefronts.');
+            .setName(translateDefault('commands.configure.sub.storefronts.name'))
+            .setNameLocalizations(translateAll('commands.configure.sub.storefronts.name'))
+            .setDescription(translateDefault('commands.configure.sub.storefronts.description'))
+            .setDescriptionLocalizations(translateAll('commands.configure.sub.storefronts.description'));
         })
     });
   }
