@@ -3,7 +3,8 @@ import { ExtendedClient } from '../base/client/ExtendedClient';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { getGuild } from '../features/gameOffers/functions/getGuild';
 import { GuildChatInputCommandInteraction } from '../base/types/aliases';
-import { translateAll, translateDefault } from '../i18n/translate';
+import { getInteractionTranslator, translateAll, translateDefault } from '../i18n/translate';
+import { MESSAGE_EMBED_COLOR } from '../config/constants';
 
 export default class InfoCommand extends Command {
   public constructor(client: ExtendedClient) {
@@ -19,31 +20,33 @@ export default class InfoCommand extends Command {
   }
 
   public override async run(interaction: GuildChatInputCommandInteraction): Promise<void> {
+    const t = getInteractionTranslator(interaction);
     const guildInfo = await getGuild(interaction.guildId);
 
     if (!guildInfo) {
-      await interaction.reply({ content: 'No settings have been found for this server. Please use the /configure channel command.' });
+      await interaction.reply({ content: t('commands.info.run.pre_check.text') });
       return;
     }
 
     const guild = await this.client.guilds.fetch(guildInfo.guild);
     const channel = guildInfo.channel ? await this.client.channels.fetch(guildInfo.channel) : null;
 
-    const createdAt = new Date(guildInfo.created_at);
-    const updatedAt = new Date(guildInfo.updated_at);
+    const createdAt = new Date(guildInfo.created_at).toLocaleString(interaction.locale);
+    const updatedAt = new Date(guildInfo.updated_at).toLocaleString(interaction.locale);
 
     const embed = new EmbedBuilder()
-      .setTitle('Free Games Notifier Settings')
+      .setTitle(t('commands.info.run.embed.title'))
+      .setColor(MESSAGE_EMBED_COLOR)
       .setFields(
-        { name: 'Server', value: guild.name, inline: true } as any,
-        { name: 'Subscription Channel', value: channel?.toString() ?? 'Unset', inline: true } as any,
-        { name: 'Subscriptions', value: "Here's a list of all the storefronts subscriptions for this server.", inline: false } as any,
-        ...Object.entries(guildInfo.storefronts).map(([storefront, enabled]) => {
-          return { name: storefront, value: enabled ? 'Enabled' : 'Disabled', inline: true };
-        }) as any
+        { name: t('commands.info.run.embed.fields.server.name'), value: guild.name, inline: true },
+        { name: t('commands.info.run.embed.fields.channel.name'), value: channel ? channel.toString() : t('commands.info.run.embed.fields.channel.value.unset'), inline: true },
+        { name: t('commands.info.run.embed.fields.subscriptions.name'), value: t('commands.info.run.embed.fields.subscriptions.value'), inline: false },
+        ...Object.entries(guildInfo.storefronts).map(([storefront, data]) => {
+          return { name: storefront, value: data.enabled ? t('commands.info.run.embed.fields.storefronts.value.enabled') : t('commands.info.run.embed.fields.storefronts.value.disabled'), inline: true };
+        })
       )
       .setFooter({
-        text: `Settings created @ ${createdAt.toLocaleString()}\nLast updated @ ${updatedAt.toLocaleString()}`
+        text: t('commands.info.run.embed.footer', { createdAt, updatedAt })
       });
 
     await interaction.reply({ embeds: [embed] });

@@ -17,7 +17,6 @@ describe('Commands > HelpCommand', () => {
   describe('constructor', () => {
     it('should set the appropriate values.', () => {
       const command = new HelpCommand(client);
-
       expect(command.name).toBe('help');
     });
   });
@@ -38,7 +37,7 @@ describe('Commands > HelpCommand', () => {
           .setColor(MESSAGE_EMBED_COLOR)
           .setThumbnail(MESSAGE_EMBED_THUMBNAIL)
           .setFields(
-            { name: 'Basic Information', value: 'This bot will send messages whenever a game becomes free on various game storefronts. To use this, make sure to run the /configure command to set the subscribed channel to send the notifications to. You may also choose which storefronts to get notified for.', inline: false },
+            { name: 'Basic Information', value: 'This bot will send messages whenever a game becomes free on various game storefronts. To use this, make sure to run the **/configure channel** command to set the subscribed channel to send the notifications to. You may also choose which storefronts to get notified for.', inline: false },
             { name: 'Found a bug?', value: "If you found something broken, have feature requests or suggestions, don't hesitate to report them in the GitHub repo.", inline: false }
           )
       ];

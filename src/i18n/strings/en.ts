@@ -14,7 +14,7 @@ export default {
   'commands.help.description': 'Help and usage information.',
   'commands.help.run.embed.title': 'Free Games Notifier',
   'commands.help.run.embed.fields.0.name': 'Basic Information',
-  'commands.help.run.embed.fields.0.value': 'This bot will send messages whenever a game becomes free on various game storefronts. To use this, make sure to run the /configure command to set the subscribed channel to send the notifications to. You may also choose which storefronts to get notified for.',
+  'commands.help.run.embed.fields.0.value': 'This bot will send messages whenever a game becomes free on various game storefronts. To use this, make sure to run the **/configure channel** command to set the subscribed channel to send the notifications to. You may also choose which storefronts to get notified for.',
   'commands.help.run.embed.fields.1.name': 'Found a bug?',
   'commands.help.run.embed.fields.1.value': "If you found something broken, have feature requests or suggestions, don't hesitate to report them in the GitHub repo.",
   'commands.help.run.buttons.bot_issues.label': 'Found a bug with the bot?',
@@ -23,6 +23,16 @@ export default {
 
   'commands.info.name': 'info',
   'commands.info.description': 'Get the settings information saved for this server.',
+  'commands.info.run.pre_check.text': 'No settings have been found for this server. Please use **/configure channel** command to set up the subscription channel.',
+  'commands.info.run.embed.title': 'Settings for Free Games Notifier',
+  'commands.info.run.embed.fields.server.name': 'Server',
+  'commands.info.run.embed.fields.channel.name': 'Subscription Channel',
+  'commands.info.run.embed.fields.channel.value.unset': 'Unset',
+  'commands.info.run.embed.fields.subscriptions.name': 'Subscriptions',
+  'commands.info.run.embed.fields.subscriptions.value': "Here's a list of all the storefronts this server is subscribed to.",
+  'commands.info.run.embed.fields.storefronts.value.enabled': '✅ Enabled',
+  'commands.info.run.embed.fields.storefronts.value.disabled': '❌ Disabled',
+  'commands.info.run.embed.footer': 'Created: {createdAt}\nLast modified: {updatedAt}',
 
   'commands.offers.name': 'offers',
   'commands.offers.description': 'Get a list of free games currently offered.'
