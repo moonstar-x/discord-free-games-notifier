@@ -8,6 +8,7 @@ describe('Features > GameOffers > Functions > GetGuild', () => {
   const guildData = {
     guild: '1267881983548063785',
     channel: null,
+    locale: 'en-US',
     created_at: '2024-08-04T15:16:40.054841+00:00',
     updated_at: '2024-08-04T15:16:40.054841+00:00',
     storefronts: {

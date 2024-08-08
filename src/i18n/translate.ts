@@ -14,6 +14,13 @@ export type LocalizedTranslateFunction = (key: MessageKey, values?: TranslateFun
 export type TranslateAllFunction = (key: MessageKey, values?: TranslateFunctionValues) => Partial<Record<Locale, string>>
 
 export const DEFAULT_LOCALE: Locale = 'en-US';
+export const AVAILABLE_LOCALES: Record<Locale, MessageKey> = {
+  'en-US': 'locales.names.english',
+  'en-GB': 'locales.names.english',
+  'es-ES': 'locales.names.spanish',
+  'es-419': 'locales.names.spanish',
+  fr: 'locales.names.french'
+};
 const castLocaleStrings = localeStrings as LocaleMessageMap;
 
 const getMessage = (locale: Locale, key: MessageKey, useDefault: boolean = true): IntlMessageFormat => {

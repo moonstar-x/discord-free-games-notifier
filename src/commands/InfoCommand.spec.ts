@@ -10,6 +10,7 @@ jest.mock('../features/gameOffers/functions/getGuild', () => {
     getGuild: jest.fn().mockResolvedValue({
       guild: '1267881983548063785',
       channel: '1267881984642908346',
+      locale: 'en-US',
       created_at: '2024-08-04T15:16:40.054841+00:00',
       updated_at: '2024-08-04T15:16:40.054841+00:00',
       storefronts: {
@@ -74,6 +75,7 @@ describe('Commands > InfoCommand', () => {
           .setFields(
             { name: 'Server', value: 'Guild', inline: true },
             { name: 'Subscription Channel', value: 'Channel', inline: true },
+            { name: 'Subscription Language', value: 'English', inline: true },
             { name: 'Subscriptions', value: "Here's a list of all the storefronts this server is subscribed to.", inline: false },
             { name: 'EpicGames', value: '✅ Enabled', inline: true },
             { name: 'Steam', value: '❌ Disabled', inline: true }
@@ -110,6 +112,7 @@ describe('Commands > InfoCommand', () => {
           .setFields(
             { name: 'Server', value: 'Guild', inline: true },
             { name: 'Subscription Channel', value: 'Unset', inline: true },
+            { name: 'Subscription Language', value: 'English', inline: true },
             { name: 'Subscriptions', value: "Here's a list of all the storefronts this server is subscribed to.", inline: false },
             { name: 'EpicGames', value: '✅ Enabled', inline: true },
             { name: 'Steam', value: '❌ Disabled', inline: true }
@@ -133,6 +136,7 @@ describe('Commands > InfoCommand', () => {
           .setFields(
             { name: 'Server', value: 'Guild', inline: true },
             { name: 'Subscription Channel', value: 'Unset', inline: true },
+            { name: 'Subscription Language', value: 'English', inline: true },
             { name: 'Subscriptions', value: "Here's a list of all the storefronts this server is subscribed to.", inline: false },
             { name: 'EpicGames', value: '✅ Enabled', inline: true },
             { name: 'Steam', value: '❌ Disabled', inline: true }

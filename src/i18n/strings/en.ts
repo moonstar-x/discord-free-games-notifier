@@ -9,6 +9,8 @@ export default {
   'commands.configure.sub.channel.options.channel.description': 'The text channel to use.',
   'commands.configure.sub.storefronts.name': 'storefronts',
   'commands.configure.sub.storefronts.description': 'Enable or disable notifications from each storefront.',
+  'commands.configure.sub.language.name': 'language',
+  'commands.configure.sub.language.description': 'Change the language for the notifications.',
 
   'commands.help.name': 'help',
   'commands.help.description': 'Help and usage information.',
@@ -28,6 +30,7 @@ export default {
   'commands.info.run.embed.fields.server.name': 'Server',
   'commands.info.run.embed.fields.channel.name': 'Subscription Channel',
   'commands.info.run.embed.fields.channel.value.unset': 'Unset',
+  'commands.info.run.embed.fields.locale.name': 'Subscription Language',
   'commands.info.run.embed.fields.subscriptions.name': 'Subscriptions',
   'commands.info.run.embed.fields.subscriptions.value': "Here's a list of all the storefronts this server is subscribed to.",
   'commands.info.run.embed.fields.storefronts.value.enabled': '✅ Enabled',
@@ -49,5 +52,9 @@ export default {
   'offers.embed.fields.type.value.dlc': '➕ DLC',
   'offers.embed.fields.type.value.bundle': '💰 Bundle',
   'offers.embed.fields.type.value.other': '❓ Other',
-  'offers.buttons.get.label': 'Get it on {storefront}!'
+  'offers.buttons.get.label': 'Get it on {storefront}!',
+
+  'locales.names.english': 'English',
+  'locales.names.spanish': 'Spanish',
+  'locales.names.french': 'French'
 };

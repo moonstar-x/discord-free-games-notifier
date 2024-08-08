@@ -3,7 +3,7 @@ import { ExtendedClient } from '../base/client/ExtendedClient';
 import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { getGuild } from '../features/gameOffers/functions/getGuild';
 import { GuildChatInputCommandInteraction } from '../base/types/aliases';
-import { getInteractionTranslator, translateAll, translateDefault } from '../i18n/translate';
+import { AVAILABLE_LOCALES, DEFAULT_LOCALE, getInteractionTranslator, translateAll, translateDefault } from '../i18n/translate';
 import { MESSAGE_EMBED_COLOR } from '../config/constants';
 
 export default class InfoCommand extends Command {
@@ -30,6 +30,7 @@ export default class InfoCommand extends Command {
 
     const guild = await this.client.guilds.fetch(guildInfo.guild);
     const channel = guildInfo.channel ? await this.client.channels.fetch(guildInfo.channel) : null;
+    const localeKey = AVAILABLE_LOCALES[guildInfo.locale] ?? AVAILABLE_LOCALES[DEFAULT_LOCALE];
 
     const createdAt = new Date(guildInfo.created_at).toLocaleString(interaction.locale);
     const updatedAt = new Date(guildInfo.updated_at).toLocaleString(interaction.locale);
@@ -40,6 +41,7 @@ export default class InfoCommand extends Command {
       .setFields(
         { name: t('commands.info.run.embed.fields.server.name'), value: guild.name, inline: true },
         { name: t('commands.info.run.embed.fields.channel.name'), value: channel ? channel.toString() : t('commands.info.run.embed.fields.channel.value.unset'), inline: true },
+        { name: t('commands.info.run.embed.fields.locale.name'), value: t(localeKey), inline: true },
         { name: t('commands.info.run.embed.fields.subscriptions.name'), value: t('commands.info.run.embed.fields.subscriptions.value'), inline: false },
         ...Object.entries(guildInfo.storefronts).map(([storefront, data]) => {
           return { name: storefront, value: data.enabled ? t('commands.info.run.embed.fields.storefronts.value.enabled') : t('commands.info.run.embed.fields.storefronts.value.disabled'), inline: true };

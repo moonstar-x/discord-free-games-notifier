@@ -1,5 +1,5 @@
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder } from 'discord.js';
-import { LocalizedTranslateFunction } from '../i18n/translate';
+import { Locale, LocalizedTranslateFunction } from '../i18n/translate';
 import { MESSAGE_EMBED_COLOR } from '../config/constants';
 
 export type GameOfferType = 'game' | 'dlc' | 'bundle' | 'other';
@@ -20,6 +20,7 @@ export interface GameOffer {
 export interface GameOfferGuild {
   guild: string
   channel: string | null
+  locale: Locale
   created_at: string
   updated_at: string
   storefronts: {

@@ -1,6 +1,7 @@
 CREATE TABLE IF NOT EXISTS GuildSettings(
     guild VARCHAR(64) NOT NULL,
     channel VARCHAR(64),
+    locale VARCHAR(16) DEFAULT 'en-US',
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     CONSTRAINT pk_GuildSettings
@@ -51,6 +52,7 @@ BEGIN
         SELECT json_build_object(
             'guild', GS.guild,
             'channel', GS.channel,
+            'locale', COALESCE(GS.locale, 'en-US'),
             'created_at', GS.created_at,
             'updated_at', GS.updated_at,
             'storefronts', (
@@ -82,6 +84,20 @@ BEGIN
 
     IF NOT FOUND THEN
         INSERT INTO GuildSettings(guild, channel) VALUES(guild_id, new_channel_id);
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION update_or_create_guild_locale(guild_id VARCHAR, new_locale VARCHAR)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE GuildSettings
+        SET locale = new_locale,
+            updated_at = now()
+        WHERE guild = guild_id;
+
+    IF NOT FOUND THEN
+        INSERT INTO GuildSettings(guild, locale) VALUES(guild_id, new_locale);
     END IF;
 END;
 $$ LANGUAGE plpgsql;

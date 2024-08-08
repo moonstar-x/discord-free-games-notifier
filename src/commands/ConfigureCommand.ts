@@ -41,6 +41,13 @@ export default class ConfigureCommand extends Command {
             .setDescription(translateDefault('commands.configure.sub.storefronts.description'))
             .setDescriptionLocalizations(translateAll('commands.configure.sub.storefronts.description'));
         })
+        .addSubcommand((input) => {
+          return input
+            .setName(translateDefault('commands.configure.sub.language.name'))
+            .setNameLocalizations(translateAll('commands.configure.sub.language.name'))
+            .setDescription(translateDefault('commands.configure.sub.language.description'))
+            .setDescriptionLocalizations(translateAll('commands.configure.sub.language.description'));
+        })
     });
   }
 
@@ -52,6 +59,8 @@ export default class ConfigureCommand extends Command {
         return this.runChannel(interaction);
       case 'storefronts':
         return this.runStorefronts(interaction);
+      case 'language':
+        return this.runLanguage(interaction);
       default:
         return this.runDefault(interaction);
     }
@@ -101,6 +110,10 @@ export default class ConfigureCommand extends Command {
 
       await confirmation.update({ content: `Updated ${storefront} subscription.`, components: [] });
     }
+  }
+
+  private async runLanguage(interaction: GuildChatInputCommandInteraction): Promise<void> {
+    await interaction.reply({ content: 'hi' });
   }
 
   private async runDefault(interaction: ChatInputCommandInteraction): Promise<void> {
