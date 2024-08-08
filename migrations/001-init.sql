@@ -148,9 +148,11 @@ BEGIN
                 )
             ),
         '[]'::json) FROM GuildSettings GS
-            INNER JOIN GuildGameOffersEnabled GGOE ON GS.guild = GGOE.guild
-            INNER JOIN GameOfferStorefront GOS ON GGOE.storefront_id = GOS.id
-            WHERE GS.channel IS NOT NULL AND GOS.name = storefront AND GGOE.enabled
+            WHERE GS.channel IS NOT NULL AND NOT EXISTS (
+                SELECT 1 FROM GuildGameOffersEnabled GGOE
+                    JOIN GameOfferStorefront GOS ON GGOE.storefront_id = GOS.id
+                    WHERE GGOE.guild = GS.guild AND GOS.name = storefront AND GGOE.enabled = FALSE
+            )
     );
 END;
 $$ LANGUAGE plpgsql;
