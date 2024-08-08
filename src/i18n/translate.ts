@@ -21,6 +21,11 @@ export const AVAILABLE_LOCALES: Record<Locale, MessageKey> = {
   'es-419': 'locales.names.spanish',
   fr: 'locales.names.french'
 };
+export const MESSAGE_KEY_TO_LOCALE: Partial<Record<MessageKey, Locale>> = {
+  'locales.names.english': 'en-US',
+  'locales.names.spanish': 'es-419',
+  'locales.names.french': 'fr'
+};
 const castLocaleStrings = localeStrings as LocaleMessageMap;
 
 const getMessage = (locale: Locale, key: MessageKey, useDefault: boolean = true): IntlMessageFormat => {

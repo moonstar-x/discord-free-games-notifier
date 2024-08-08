@@ -5,7 +5,8 @@ import { updateOrCreateGuildChannel } from '../features/gameOffers/functions/upd
 import { GuildChatInputCommandInteraction } from '../base/types/aliases';
 import { getStorefronts } from '../features/gameOffers/functions/getStorefronts';
 import { setGuildGameOfferEnabled } from '../features/gameOffers/functions/setGuildGameOfferEnabled';
-import { translateAll, translateDefault } from '../i18n/translate';
+import { AVAILABLE_LOCALES, getInteractionTranslator, Locale, MESSAGE_KEY_TO_LOCALE, MessageKey, translateAll, translateDefault } from '../i18n/translate';
+import { updateOrCreateGuildLocale } from '../features/gameOffers/functions/updateOrCreateGuildLocale';
 
 export default class ConfigureCommand extends Command {
   public constructor(client: ExtendedClient) {
@@ -46,7 +47,22 @@ export default class ConfigureCommand extends Command {
             .setName(translateDefault('commands.configure.sub.language.name'))
             .setNameLocalizations(translateAll('commands.configure.sub.language.name'))
             .setDescription(translateDefault('commands.configure.sub.language.description'))
-            .setDescriptionLocalizations(translateAll('commands.configure.sub.language.description'));
+            .setDescriptionLocalizations(translateAll('commands.configure.sub.language.description'))
+            .addStringOption((input) => {
+              return input
+                .setName(translateDefault('commands.configure.sub.language.options.language.name'))
+                .setNameLocalizations(translateAll('commands.configure.sub.language.options.language.name'))
+                .setDescription(translateDefault('commands.configure.sub.language.options.language.description'))
+                .setDescriptionLocalizations(translateAll('commands.configure.sub.language.options.language.description'))
+                .setRequired(true)
+                .setChoices(Object.entries(MESSAGE_KEY_TO_LOCALE).map(([key, locale]) => {
+                  return {
+                    name: translateDefault(key as MessageKey),
+                    name_localizations: translateAll(key as MessageKey),
+                    value: locale
+                  };
+                }));
+            });
         })
     });
   }
@@ -67,56 +83,87 @@ export default class ConfigureCommand extends Command {
   }
 
   private async runChannel(interaction: GuildChatInputCommandInteraction): Promise<void> {
+    const t = getInteractionTranslator(interaction);
     const channel = interaction.options.getChannel('channel');
 
     if (!channel) {
-      await interaction.reply({ content: 'No channel received.' });
+      await interaction.reply({ content: t('commands.configure.run.channel.pre_check.text') });
       return;
     }
 
     await updateOrCreateGuildChannel(interaction.guildId, channel.id);
-    await interaction.reply({ content: `Updated notifications channel to ${channel}.` });
+    await interaction.reply({ content: t('commands.configure.run.channel.success.text', { channel: channel.toString() }) });
   }
 
   private async runStorefronts(interaction: GuildChatInputCommandInteraction): Promise<void> {
+    const t = getInteractionTranslator(interaction);
     const storefronts = await getStorefronts();
 
     if (!storefronts.length) {
-      await interaction.reply({ content: 'No storefronts are available.' });
+      await interaction.reply({ content: t('commands.configure.run.storefronts.empty.text') });
       return;
     }
 
-    await interaction.reply({ content: 'Click on the enable or disable buttons for each Storefront to enable or disable it.' });
+    await interaction.reply({ content: t('commands.configure.run.storefronts.start.text') });
+
+    const buttonIds = {
+      enable: 'configure-storefronts-enable',
+      disable: 'configure-storefronts-disable'
+    };
 
     for (const storefront of storefronts) {
-      const enableButton = new ButtonBuilder()
-        .setCustomId('storefronts-enable')
-        .setLabel('Enable')
-        .setStyle(ButtonStyle.Primary);
+      const row = new ActionRowBuilder<ButtonBuilder>()
+        .setComponents(
+          new ButtonBuilder()
+            .setCustomId(buttonIds.enable)
+            .setLabel(t('commands.configure.run.storefronts.buttons.enable.label'))
+            .setStyle(ButtonStyle.Primary)
+            .setEmoji('✅'),
+          new ButtonBuilder()
+            .setCustomId(buttonIds.disable)
+            .setLabel(t('commands.configure.run.storefronts.buttons.disable.label'))
+            .setStyle(ButtonStyle.Secondary)
+            .setEmoji('❌')
+        );
 
-      const disableButton = new ButtonBuilder()
-        .setCustomId('storefronts-disable')
-        .setLabel('Disable')
-        .setStyle(ButtonStyle.Secondary);
+      const followUpSent = await interaction.followUp({ content: t('commands.configure.run.storefronts.follow_up.question.text', { storefront }), components: [row] });
+      const userResponse = await followUpSent.awaitMessageComponent({
+        filter: (i) => {
+          return i.user.id === interaction.user.id && Object.values(buttonIds).includes(i.customId);
+        },
+        time: 60_000
+      });
 
-      const actionRow = new ActionRowBuilder()
-        .addComponents(enableButton, disableButton);
+      const shouldEnable = userResponse.customId === buttonIds.enable;
+      await setGuildGameOfferEnabled(interaction.guildId, storefront, shouldEnable);
 
-      const response = await interaction.followUp({ content: `Enable or disable **${storefront}**?`, components: [actionRow] as any });
-      const confirmation = await response.awaitMessageComponent({ filter: (i) => i.user.id === interaction.user.id && i.customId.startsWith('storefronts'), time: 60_000 });
-
-      const enabled = confirmation.customId === 'storefronts-enable';
-      await setGuildGameOfferEnabled(interaction.guildId, storefront, enabled);
-
-      await confirmation.update({ content: `Updated ${storefront} subscription.`, components: [] });
+      await userResponse.update({
+        content: shouldEnable ?
+          t('commands.configure.run.storefronts.response.update.positive.text', { storefront }) :
+          t('commands.configure.run.storefronts.response.update.negative.text', { storefront }),
+        components: []
+      });
     }
   }
 
   private async runLanguage(interaction: GuildChatInputCommandInteraction): Promise<void> {
-    await interaction.reply({ content: 'hi' });
+    const t = getInteractionTranslator(interaction);
+    const locale = interaction.options.getString('language') as Locale | null;
+
+    if (!locale) {
+      await interaction.reply({ content: t('commands.configure.run.language.pre_check.text') });
+      return;
+    }
+
+    const language = t(AVAILABLE_LOCALES[locale]);
+    await updateOrCreateGuildLocale(interaction.guildId, locale);
+
+    await interaction.reply({ content: t('commands.configure.run.language.success.text', { language }) });
   }
 
   private async runDefault(interaction: ChatInputCommandInteraction): Promise<void> {
-    await interaction.reply({ content: 'Unknown subcommand received.' });
+    const t = getInteractionTranslator(interaction);
+
+    await interaction.reply({ content: t('commands.configure.run.default.response.text') });
   }
 }
