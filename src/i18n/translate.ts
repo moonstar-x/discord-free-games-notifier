@@ -49,6 +49,10 @@ export const getInteractionTranslator = (interaction: BaseInteraction): Localize
   return getMessage(interaction.locale, key, true).format(values as TranslateFunctionValues) as string;
 };
 
+export const getTranslator = (locale: Locale): LocalizedTranslateFunction => (key, values) => {
+  return getMessage(locale, key, true).format(values as TranslateFunctionValues) as string;
+};
+
 export const translateAll: TranslateAllFunction = (key, values) => {
   const locales = Object.keys(castLocaleStrings);
 

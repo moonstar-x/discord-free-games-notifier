@@ -7,7 +7,20 @@ import { MESSAGE_EMBED_COLOR } from '../config/constants';
 
 jest.mock('../features/gameOffers/functions/getGuild', () => {
   return {
-    getGuild: jest.fn()
+    getGuild: jest.fn().mockResolvedValue({
+      guild: '1267881983548063785',
+      channel: '1267881984642908346',
+      created_at: '2024-08-04T15:16:40.054841+00:00',
+      updated_at: '2024-08-04T15:16:40.054841+00:00',
+      storefronts: {
+        EpicGames: {
+          enabled: true
+        },
+        Steam: {
+          enabled: false
+        }
+      }
+    })
   };
 });
 
@@ -43,23 +56,6 @@ describe('Commands > InfoCommand', () => {
       locale: 'en-US',
       guildId: '1267881983548063785'
     } as unknown as GuildChatInputCommandInteraction;
-
-    beforeAll(() => {
-      (getGuild as jest.Mock).mockResolvedValue({
-        guild: '1267881983548063785',
-        channel: '1267881984642908346',
-        created_at: '2024-08-04T15:16:40.054841+00:00',
-        updated_at: '2024-08-04T15:16:40.054841+00:00',
-        storefronts: {
-          EpicGames: {
-            enabled: true
-          },
-          Steam: {
-            enabled: false
-          }
-        }
-      });
-    });
 
     it('should reply with configure message if no settings are found.', async () => {
       (getGuild as jest.Mock).mockResolvedValueOnce(null);

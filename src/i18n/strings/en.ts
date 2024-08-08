@@ -35,5 +35,19 @@ export default {
   'commands.info.run.embed.footer': 'Created: {createdAt}\nLast modified: {updatedAt}',
 
   'commands.offers.name': 'offers',
-  'commands.offers.description': 'Get a list of free games currently offered.'
+  'commands.offers.description': 'Get a list of free games currently offered.',
+  'commands.offers.run.empty.text': 'There are currently no offers in any of the following storefronts: {list}.',
+  'commands.offers.run.start.text': "Here's a list of the currently available offers.",
+
+  'offers.embed.title': '{game} on {storefront}',
+  'offers.embed.fields.publisher.name': 'Publisher',
+  'offers.embed.fields.publisher.name.unknown': 'N/A',
+  'offers.embed.fields.price.name': 'Original Price',
+  'offers.embed.fields.price.name.unknown': 'N/A',
+  'offers.embed.fields.type.name': 'Type',
+  'offers.embed.fields.type.value.game': '👾️ Game',
+  'offers.embed.fields.type.value.dlc': '➕ DLC',
+  'offers.embed.fields.type.value.bundle': '💰 Bundle',
+  'offers.embed.fields.type.value.other': '❓ Other',
+  'offers.buttons.get.label': 'Get it on {storefront}!'
 };

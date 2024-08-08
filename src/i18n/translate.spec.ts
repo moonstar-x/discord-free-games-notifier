@@ -1,4 +1,4 @@
-import { getInteractionTranslator, MessageKey, translate, translateAll, translateDefault } from './translate';
+import { getInteractionTranslator, getTranslator, MessageKey, translate, translateAll, translateDefault } from './translate';
 import { TranslatorError } from './error';
 import { BaseInteraction } from 'discord.js';
 
@@ -129,6 +129,48 @@ describe('i18n > Translate', () => {
 
     it('should return expected message with values inserted.', () => {
       const t = getInteractionTranslator(interaction);
+      const result = t('bye' as MessageKey, { name: 'John' });
+      expect(result).toBe('Adios John');
+    });
+  });
+
+  describe('getTranslator()', () => {
+    it('should be defined.', () => {
+      expect(getTranslator).toBeDefined();
+    });
+
+    it('should throw TranslatorError if locale does not exist.', () => {
+      const expectedError = new TranslatorError('No messages for locale ko exist.');
+
+      expect(() => {
+        const t = getTranslator('ko');
+        t('hi' as MessageKey);
+      }).toThrow(expectedError);
+    });
+
+    it('should throw TranslatorError if message does not exist in given and default locale.', () => {
+      const expectedError = new TranslatorError('No message with key what for locale es-ES or en-US exists.');
+
+      expect(() => {
+        const t = getTranslator('es-ES');
+        t('what' as MessageKey);
+      }).toThrow(expectedError);
+    });
+
+    it('should return expected message.', () => {
+      const t = getTranslator('es-ES');
+      const result = t('hi' as MessageKey);
+      expect(result).toBe('Hola');
+    });
+
+    it('should return default message if it does not exist for given locale.', () => {
+      const t = getTranslator('fr');
+      const result = t('please' as MessageKey);
+      expect(result).toBe('Please');
+    });
+
+    it('should return expected message with values inserted.', () => {
+      const t = getTranslator('es-ES');
       const result = t('bye' as MessageKey, { name: 'John' });
       expect(result).toBe('Adios John');
     });
