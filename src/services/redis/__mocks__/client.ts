@@ -2,7 +2,9 @@ const client = {
   connect: jest.fn(),
   disconnect: jest.fn(),
   keys: jest.fn(),
-  mGet: jest.fn()
+  mGet: jest.fn(),
+  subscribe: jest.fn(),
+  unsubscribe: jest.fn()
 };
 
 export const createRedisClient = jest.fn().mockReturnValue(client);
