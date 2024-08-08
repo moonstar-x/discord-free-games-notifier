@@ -30,6 +30,12 @@ export interface GameOfferGuild {
   }
 }
 
+export interface NotifiableGuild {
+  guild: string
+  channel: string
+  locale: Locale
+}
+
 export const offerToMessage = (offer: GameOffer, t: LocalizedTranslateFunction): { embed: EmbedBuilder, component: ActionRowBuilder<ButtonBuilder> } => {
   const typeMap: Partial<Record<GameOfferType, string>> = {
     game: t('offers.embed.fields.type.value.game'),

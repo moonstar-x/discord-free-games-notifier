@@ -134,3 +134,23 @@ BEGIN
     DELETE FROM GuildSettings WHERE guild = guild_id;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_notifiable_guilds(storefront VARCHAR)
+RETURNS JSON AS $$
+BEGIN
+    RETURN (
+        SELECT COALESCE(
+            json_agg(
+                json_build_object(
+                    'guild', GS.guild,
+                    'channel', GS.channel,
+                    'locale', COALESCE(GS.locale, 'en-US')
+                )
+            ),
+        '[]'::json) FROM GuildSettings GS
+            INNER JOIN GuildGameOffersEnabled GGOE ON GS.guild = GGOE.guild
+            INNER JOIN GameOfferStorefront GOS ON GGOE.storefront_id = GOS.id
+            WHERE GS.channel IS NOT NULL AND GOS.name = storefront AND GGOE.enabled
+    );
+END;
+$$ LANGUAGE plpgsql;
