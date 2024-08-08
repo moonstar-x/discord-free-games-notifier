@@ -2,6 +2,7 @@ import { Client, ClientOptions, ClientEvents, ChatInputCommandInteraction } from
 import { CommandRegistry } from '../command/CommandRegistry';
 import { InteractionDispatcher } from '../command/InteractionDispatcher';
 import { Command } from '../command/Command';
+import { OffersNotifier } from '../../features/gameOffers/classes/OffersNotifier';
 
 export interface ExtendedClientEvents extends ClientEvents {
   commandExecute: [command: Command, interaction: ChatInputCommandInteraction]
@@ -38,17 +39,20 @@ export declare interface ExtendedClient {
 export class ExtendedClient extends Client {
   public readonly registry: CommandRegistry;
   public readonly dispatcher: InteractionDispatcher;
+  public readonly notifier: OffersNotifier;
 
   public constructor(options: ClientOptions) {
     super(options);
 
     this.registry = new CommandRegistry(this);
     this.dispatcher = new InteractionDispatcher(this, this.registry);
+    this.notifier = new OffersNotifier(this);
 
     this.registerBasicHandlers();
   }
 
   private registerBasicHandlers(): void {
     this.on('interactionCreate', (interaction) => this.dispatcher.handleInteraction(interaction));
+    this.on('ready', async () => await this.notifier.subscribe());
   }
 }

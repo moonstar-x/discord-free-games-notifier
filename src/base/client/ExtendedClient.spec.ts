@@ -11,6 +11,16 @@ jest.mock('../command/InteractionDispatcher', () => {
   };
 });
 
+jest.mock('../../features/gameOffers/classes/OffersNotifier', () => {
+  return {
+    OffersNotifier: jest.fn().mockImplementation(() => {
+      return {
+        subscribe: jest.fn()
+      };
+    })
+  };
+});
+
 describe('Base > Client > ExtendedClient', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -28,6 +38,13 @@ describe('Base > Client > ExtendedClient', () => {
 
         client.emit('interactionCreate', interaction);
         expect(client.dispatcher.handleInteraction).toHaveBeenCalledWith(interaction);
+      });
+
+      it('should register ready on construction.', () => {
+        const client = new ExtendedClient({ intents: [] as ReadonlyArray<GatewayIntentBits> });
+
+        client.emit('ready' as unknown as never);
+        expect(client.notifier.subscribe).toHaveBeenCalled();
       });
     });
   });
