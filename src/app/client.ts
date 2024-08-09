@@ -9,8 +9,6 @@ export const createClient = () => {
     intents: [GatewayIntentBits.Guilds] as const
   });
 
-  client.registry.registerIn(path.join(__dirname, '../commands'));
-
   if (DEBUG_ENABLED) {
     client.on('debug', ClientEventHandlers.handleDebug);
   }
@@ -24,6 +22,8 @@ export const createClient = () => {
   client.on('commandExecute', ClientEventHandlers.handleCommandExecute);
   client.on('commandError', ClientEventHandlers.handleCommandError);
   client.on('commandRegistered', ClientEventHandlers.handleCommandRegistered);
+
+  client.registry.registerIn(path.join(__dirname, '../commands'));
 
   return client;
 };
