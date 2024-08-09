@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development nodemon src/entrypoint/start.ts",
+    "dev:sharded": "cross-env NODE_ENV=development npm run build && cross-env NODE_ENV=development node build/entrypoint/startShardedDev.js",
     "build": "tsc -p ./tsconfig.build.json",
     "type-check": "tsc --noEmit",
     "lint": "eslint . --ext .tsx,.ts,.js",
