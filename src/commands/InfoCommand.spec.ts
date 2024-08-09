@@ -126,7 +126,7 @@ describe('Commands > InfoCommand', () => {
     });
 
     it('should reply with the correct embed if channel set does not exist.', async () => {
-      (client.channels.fetch as jest.Mock).mockResolvedValueOnce(null);
+      (client.channels.fetch as jest.Mock).mockRejectedValueOnce(null);
       await command.run(interaction);
 
       const expectedEmbeds = [

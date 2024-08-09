@@ -1,6 +1,6 @@
 import { Command } from '../base/command/Command';
 import { ExtendedClient } from '../base/client/ExtendedClient';
-import { EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import { Channel, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
 import { getGuild } from '../features/gameOffers/functions/getGuild';
 import { GuildChatInputCommandInteraction } from '../base/types/aliases';
 import { AVAILABLE_LOCALES, DEFAULT_LOCALE, getInteractionTranslator, translateAll, translateDefault } from '../i18n/translate';
@@ -29,7 +29,7 @@ export default class InfoCommand extends Command {
     }
 
     const guild = await this.client.guilds.fetch(guildInfo.guild);
-    const channel = guildInfo.channel ? await this.client.channels.fetch(guildInfo.channel) : null;
+    const channel = await this.getChannel(guildInfo.channel);
     const localeKey = AVAILABLE_LOCALES[guildInfo.locale] ?? AVAILABLE_LOCALES[DEFAULT_LOCALE];
 
     const createdAt = new Date(guildInfo.created_at).toLocaleString(interaction.locale);
@@ -52,5 +52,17 @@ export default class InfoCommand extends Command {
       });
 
     await interaction.reply({ embeds: [embed] });
+  }
+
+  private async getChannel(channelId: string | null): Promise<Channel | null> {
+    try {
+      if (!channelId) {
+        return null;
+      }
+
+      return await this.client.channels.fetch(channelId);
+    } catch (error) {
+      return null;
+    }
   }
 }
