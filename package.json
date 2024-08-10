@@ -4,8 +4,8 @@
   "description": "A Discord bot that will notify you when games on various storefronts become free.",
   "private": true,
   "scripts": {
-    "dev": "cross-env NODE_ENV=development nodemon src/entrypoint/start.ts",
-    "dev:sharded": "cross-env NODE_ENV=development npm run build && cross-env NODE_ENV=development node build/entrypoint/startShardedDev.js",
+    "dev": "cross-env NODE_ENV=development nodemon src/entrypoint/startSingle.ts",
+    "dev:sharded": "cross-env NODE_ENV=development npm run build && cross-env NODE_ENV=development DISCORD_SHARDING_ENABLED=true DISCORD_SHARDING_COUNT=2 node build/entrypoint/start.js",
     "build": "tsc -p ./tsconfig.build.json",
     "type-check": "tsc --noEmit",
     "lint": "eslint . --ext .tsx,.ts,.js",
@@ -13,9 +13,8 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "deploy:dev": "ts-node src/entrypoint/deploy.ts",
-    "deploy:prod": "node build/entrypoint/deploy.ts",
-    "start": "node build/entrypoint/start.js",
-    "start:sharded": "node build/entrypoint/startSharded.js"
+    "deploy:prod": "node build/entrypoint/deploy.js",
+    "start": "node build/entrypoint/start.js"
   },
   "repository": {
     "type": "git",

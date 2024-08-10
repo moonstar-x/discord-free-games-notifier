@@ -1,29 +1,18 @@
-import { ExtendedClient } from '../base/client/ExtendedClient';
-import { runMigrations } from '../app/migration';
+const requiredRef = {
+  required: (name: string) => name
+};
 
-const client = {
-  login: jest.fn()
-} as unknown as ExtendedClient;
-
-jest.mock('../app/client', () => {
-  return {
-    createClient: jest.fn().mockReturnValue(client)
-  };
+jest.mock('./startSingle', () => {
+  requiredRef.required('single');
 });
 
-jest.mock('../app/migration', () => {
-  return {
-    runMigrations: jest.fn().mockImplementation(() => Promise.resolve())
-  };
-});
-
-jest.mock('../config/app', () => {
-  return {
-    DISCORD_TOKEN: 'token'
-  };
+jest.mock('./startSharded', () => {
+  requiredRef.required('sharded');
 });
 
 describe('Entrypoint > Start', () => {
+  const requiredMock = jest.spyOn(requiredRef, 'required', undefined as never);
+
   const load = async () => {
     jest.isolateModules(() => {
       require('./start');
@@ -33,15 +22,26 @@ describe('Entrypoint > Start', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.resetModules();
   });
 
-  it('should call migrations.', async () => {
+  it('should require single if sharding is disabled.', async () => {
+    jest.mock('../config/app', () => {
+      return {
+        DISCORD_SHARDING_ENABLED: false
+      };
+    });
     await load();
-    expect(runMigrations).toHaveBeenCalled();
+    expect(requiredMock).toHaveBeenCalledWith('single');
   });
 
-  it('should login client with token.', async () => {
+  it('should require sharded if sharding is enabled.', async () => {
+    jest.mock('../config/app', () => {
+      return {
+        DISCORD_SHARDING_ENABLED: true
+      };
+    });
     await load();
-    expect(client.login).toHaveBeenCalledWith('token');
+    expect(requiredMock).toHaveBeenCalledWith('sharded');
   });
 });

@@ -8,7 +8,8 @@ manager.spawn = jest.fn();
 
 jest.mock('../config/app', () => {
   return {
-    DISCORD_TOKEN: 'token'
+    DISCORD_TOKEN: 'token',
+    DISCORD_SHARDING_COUNT: 'auto'
   };
 });
 

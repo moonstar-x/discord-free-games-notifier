@@ -1,10 +1,7 @@
-import { createClient } from '../app/client';
-import { DISCORD_TOKEN } from '../config/app';
-import { runMigrations } from '../app/migration';
+import { DISCORD_SHARDING_ENABLED } from '../config/app';
 
-const client = createClient();
-
-runMigrations()
-  .then(() => {
-    client.login(DISCORD_TOKEN);
-  });
+if (DISCORD_SHARDING_ENABLED) {
+  require('./startSharded');
+} else {
+  require('./startSingle');
+}
