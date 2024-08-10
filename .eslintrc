@@ -1,4 +1,7 @@
 {
+  "globals": {
+    "NodeJS": true
+  },
   "extends": [
     "@moonstar-x/eslint-config/rules/node",
     "@moonstar-x/eslint-config/rules/typescript"
