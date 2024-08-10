@@ -4,6 +4,9 @@ declare global {
   namespace NodeJS {
     interface ProcessEnv {
       DISCORD_TOKEN?: string
+      DISCORD_PRESENCE_INTERVAL?: string
+      DISCORD_SHARDING_ENABLED?: string
+      DISCORD_SHARDING_COUNT?: string
 
       REDIS_URI?: string
 

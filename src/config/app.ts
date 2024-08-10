@@ -1,6 +1,9 @@
 import 'dotenv/config';
 
 export const DISCORD_TOKEN = process.env.DISCORD_TOKEN!;
+export const DISCORD_PRESENCE_INTERVAL = process.env.DISCORD_PRESENCE_INTERVAL ? parseInt(process.env.DISCORD_PRESENCE_INTERVAL, 10) : 5 * 60 * 1000;
+export const DISCORD_SHARDING_ENABLED = process.env.DISCORD_SHARDING_ENABLED === 'true';
+export const DISCORD_SHARDING_COUNT: number | 'auto' = process.env.DISCORD_SHARDING_COUNT ? process.env.DISCORD_SHARDING_COUNT !== 'auto' ? parseInt(process.env.DISCORD_SHARDING_COUNT, 10) : 'auto' : 'auto';
 
 export const REDIS_URI = process.env.REDIS_URI!;
 

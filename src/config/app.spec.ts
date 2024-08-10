@@ -6,6 +6,9 @@ describe('Config > App', () => {
   const oldEnv = { ...process.env };
   const mockedEnv = {
     DISCORD_TOKEN: 'token',
+    DISCORD_PRESENCE_INTERVAL: '10000',
+    DISCORD_SHARDING_ENABLED: 'true',
+    DISCORD_SHARDING_COUNT: '5',
     REDIS_URI: 'redis://localhost:6379',
     POSTGRES_HOST: 'localhost',
     POSTGRES_PORT: '5431',
@@ -32,6 +35,32 @@ describe('Config > App', () => {
 
   it('should export valid DISCORD_TOKEN.', () => {
     expect(config.DISCORD_TOKEN).toBe('token');
+  });
+
+  it('should export valid DISCORD_PRESENCE_INTERVAL.', () => {
+    expect(config.DISCORD_PRESENCE_INTERVAL).toBe(10000);
+  });
+
+  it('should export valid DISCORD_PRESENCE_INTERVAL if no value is provided.', () => {
+    process.env = { ...mockedEnv, DISCORD_PRESENCE_INTERVAL: undefined as unknown as string };
+    resetModule();
+
+    expect(config.DISCORD_PRESENCE_INTERVAL).toBe(5 * 60 * 1000);
+  });
+
+  it('should export valid DISCORD_SHARDING_ENABLED.', () => {
+    expect(config.DISCORD_SHARDING_ENABLED).toBe(true);
+  });
+
+  it('should export valid DISCORD_SHARDING_COUNT.', () => {
+    expect(config.DISCORD_SHARDING_COUNT).toBe(5);
+  });
+
+  it('should export valid DISCORD_SHARDING_COUNT if no value is provided.', () => {
+    process.env = { ...mockedEnv, DISCORD_SHARDING_COUNT: undefined as unknown as string };
+    resetModule();
+
+    expect(config.DISCORD_SHARDING_COUNT).toBe('auto');
   });
 
   it('should export valid REDIS_URI.', () => {

@@ -5,6 +5,7 @@ import { Command } from '../command/Command';
 import { OffersNotifier } from '../../features/gameOffers/classes/OffersNotifier';
 import { PresenceManager } from '../presence/PresenceManager';
 import { PresenceResolver } from '../presence/PresenceResolver';
+import { DISCORD_PRESENCE_INTERVAL } from '../../config/app';
 
 export interface ExtendedClientEvents extends ClientEvents {
   commandExecute: [command: Command, interaction: ChatInputCommandInteraction]
@@ -59,7 +60,7 @@ export class ExtendedClient extends Client {
     this.on('interactionCreate', (interaction) => this.dispatcher.handleInteraction(interaction));
     this.once('ready', async () => {
       await this.notifier.subscribe();
-      await this.presenceManager.setRefreshInterval(5 * 60 * 1000);
+      await this.presenceManager.setRefreshInterval(DISCORD_PRESENCE_INTERVAL);
     });
   }
 }
