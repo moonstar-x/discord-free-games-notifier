@@ -133,6 +133,10 @@ describe('Base > Presence > PresenceResolver', () => {
     });
 
     describe('getRandom()', () => {
+      beforeAll(() => {
+        client.shard = null;
+      });
+
       it('should return a random text.', async () => {
         const result = await resolver.getRandom();
         expect(typeof result).toBe('string');

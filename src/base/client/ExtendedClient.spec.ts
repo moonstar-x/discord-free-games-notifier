@@ -21,6 +21,26 @@ jest.mock('../../features/gameOffers/classes/OffersNotifier', () => {
   };
 });
 
+jest.mock('../presence/PresenceManager', () => {
+  return {
+    PresenceManager: jest.fn().mockImplementation(() => {
+      return {
+        setRefreshInterval: jest.fn()
+      };
+    })
+  };
+});
+
+jest.mock('../presence/PresenceResolver', () => {
+  return {
+    PresenceResolver: jest.fn().mockImplementation(() => {
+      return {
+        getRandom: jest.fn().mockReturnValue('presence')
+      };
+    })
+  };
+});
+
 describe('Base > Client > ExtendedClient', () => {
   beforeEach(() => {
     jest.clearAllMocks();
@@ -40,11 +60,14 @@ describe('Base > Client > ExtendedClient', () => {
         expect(client.dispatcher.handleInteraction).toHaveBeenCalledWith(interaction);
       });
 
-      it('should register ready on construction.', () => {
+      it('should register ready on construction.', async () => {
         const client = new ExtendedClient({ intents: [] as ReadonlyArray<GatewayIntentBits> });
 
         client.emit('ready' as unknown as never);
+        await Promise.resolve(); // Helps waiting for next tick.
+
         expect(client.notifier.subscribe).toHaveBeenCalled();
+        expect(client.presenceManager.setRefreshInterval).toHaveBeenCalled();
       });
     });
   });
