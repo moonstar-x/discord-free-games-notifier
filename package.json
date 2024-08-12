@@ -1,47 +1,60 @@
 {
   "name": "discord-free-games-notifier",
-  "version": "2.0.1",
-  "description": "A Discord bot that will notify when free games on Steam or Epic Games come out.",
-  "main": "./src/app.js",
+  "version": "3.0.0",
+  "description": "A Discord bot that will notify you when games on various storefronts become free.",
+  "private": true,
   "scripts": {
-    "test": "jest --watchAll --silent",
-    "test:showlogs": "jest --watchAll",
-    "test:once": "jest --silent",
-    "test:once-showlogs": "jest",
-    "start": "node ./src/app.js",
-    "debug": "node ./src/app.js --debug",
-    "dev": "NODE_ENV=development nodemon --exec node ./src/app.js",
-    "lint:errors-only": "eslint src test --quiet",
-    "lint": "eslint src test"
+    "dev": "cross-env NODE_ENV=development nodemon src/entrypoint/startSingle.ts",
+    "dev:sharded": "cross-env NODE_ENV=development npm run build && cross-env NODE_ENV=development DISCORD_SHARDING_ENABLED=true DISCORD_SHARDING_COUNT=2 node build/entrypoint/start.js",
+    "build": "tsc -p ./tsconfig.build.json",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint . --ext .tsx,.ts,.js",
+    "lint:fix": "eslint . --ext .tsx,.ts,.js --fix",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "deploy:dev": "ts-node src/entrypoint/deploy.ts",
+    "deploy:prod": "node build/entrypoint/deploy.js",
+    "start": "node build/entrypoint/start.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/moonstar-x/discord-free-games-notifier.git"
   },
-  "engines": {
-    "node": ">=12.0.0"
-  },
-  "author": "moonstar-x",
-  "license": "MIT",
+  "homepage": "https://docs.moonstar-x.dev/discord-free-games-notifier",
   "bugs": {
     "url": "https://github.com/moonstar-x/discord-free-games-notifier/issues"
   },
-  "homepage": "https://github.com/moonstar-x/discord-free-games-notifier#readme",
+  "author": "moonstar-x",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
-    "@greencoast/discord.js-extended": "^1.2.0",
-    "@greencoast/logger": "^1.1.0",
-    "axios": "^0.21.1",
-    "cheerio": "^1.0.0-rc.10",
-    "cron": "^1.8.2",
-    "discord.js": "^12.5.3",
-    "level": "^7.0.0"
+    "@moonstar-x/logger": "^1.0.1",
+    "dayjs": "^1.11.12",
+    "discord-api-types": "^0.37.93",
+    "discord.js": "^14.15.3",
+    "dotenv": "^16.4.5",
+    "flat": "^5.0.2",
+    "humanize-duration": "^3.32.1",
+    "intl-messageformat": "^10.5.14",
+    "pg-promise": "^11.9.1",
+    "redis": "^4.7.0",
+    "require-all": "^3.0.0"
   },
   "devDependencies": {
-    "@types/jest": "^27.0.1",
-    "eslint": "^7.32.0",
-    "eslint-config-greencoast": "0.0.2",
-    "jest": "^27.1.0",
-    "nodemon": "^2.0.12",
-    "text-encoding": "^0.7.0"
+    "@moonstar-x/eslint-config": "^1.0.0",
+    "@types/flat": "^5.0.5",
+    "@types/humanize-duration": "^3.27.4",
+    "@types/jest": "^29.5.12",
+    "@types/node": "^22.0.0",
+    "@types/require-all": "^3.0.6",
+    "cross-env": "^7.0.3",
+    "eslint": "^8.57.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.1.4",
+    "ts-jest": "^29.2.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
   }
 }

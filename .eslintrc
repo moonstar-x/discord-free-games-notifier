@@ -1,11 +1,13 @@
 {
+  "globals": {
+    "NodeJS": true
+  },
   "extends": [
-    "greencoast/node"
+    "@moonstar-x/eslint-config/rules/node",
+    "@moonstar-x/eslint-config/rules/typescript"
   ],
   "rules": {
-    "one-var": "off"
-  },
-  "parserOptions": {
-    "ecmaVersion": 2020
+    "no-dupe-class-members": "off",
+    "camelcase": "off"
   }
 }

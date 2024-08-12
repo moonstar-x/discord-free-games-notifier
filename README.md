@@ -1,145 +1,205 @@
-[![discord](https://img.shields.io/discord/730998659008823296.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/mhj3Zsv)
-[![ci-build-status](https://img.shields.io/github/workflow/status/moonstar-x/discord-free-games-notifier/CI?logo=github)](https://github.com/moonstar-x/discord-free-games-notifier)
-[![open-issues-count](https://img.shields.io/github/issues-raw/moonstar-x/discord-free-games-notifier?logo=github)](https://github.com/moonstar-x/discord-free-games-notifier)
-[![docker-image-size](https://img.shields.io/docker/image-size/moonstarx/discord-free-games-notifier?logo=docker)](https://hub.docker.com/repository/docker/moonstarx/discord-free-games-notifier)
-[![docker-pulls](https://img.shields.io/docker/pulls/moonstarx/discord-free-games-notifier?logo=docker)](https://hub.docker.com/repository/docker/moonstarx/discord-free-games-notifier)
+# Free Games Notifier for Discord
 
-# Discord Free Games Notifier
+A Discord bot that will notify your server when free games on storefronts like Steam or Epic Games come out.
 
-A Discord bot that will notify when free games on Steam or Epic Games come out. The bot will fetch offers from Steam and Epic Games every 30 minutes and will send a notification message to the set channel once a new offer is found.
+This bot depends on [free-games-crawler](https://github.com/moonstar-x/free-games-crawler) and site support depends on that service.
 
-## Requirements
-
-To self-host this bot, you'll need the following:
-
-* [git](https://git-scm.com/)
-* [node.js](https://nodejs.org/en/) (Version 12 or higher is required.)
-
-## Installation
-
-In order to self-host this bot, first you'll need to clone this repository.
-
-```text
-git clone https://github.com/moonstar-x/discord-free-games-notifier.git
-```
-
-Once cloned, proceed to install the dependencies:
-
-```text
-npm ci --only=prod
-```
-
-Or, if you prefer to install everything including `devDependencies`, you may run:
-
-```text
-npm install
-```
-
-After you have [configured](#configuration) your bot, you can run it with:
-
-```text
-npm start
-```
-
-## Configuration
-
-There are two ways to configure the bot, one with a `settings.json` file inside the `config` folder or with environment variables.
-
-Here's a table with the available options you may configure:
-
-| Environment Variable              | JSON Property               | Required                    | Type               | Description                                                                                                                |
-|-----------------------------------|-----------------------------|-----------------------------|--------------------|----------------------------------------------------------------------------------------------------------------------------|
-| DISCORD_TOKEN                     | `token`                     | Yes.                        | `string`           | The bot's token.                                                                                                           |
-| DISCORD_PREFIX                    | `prefix`                    | No. (Defaults to: `$`)      | `string`           | The bot's prefix. Used for the commands.                                                                                   |
-| DISCORD_OWNER_ID                  | `owner_id`                  | No. (Defaults to: `null`)   | `string` or `null` | The ID of the bot's owner.                                                                                                 |
-| DISCORD_OWNER_REPORTING           | `owner_reporting`           | No. (Defaults to: `false`)  | `boolean`          | Whether the bot should send error reports to the owner via DM when a command errors.                                       |
-| DISCORD_PRESENCE_REFRESH_INTERVAL | `presence_refresh_interval` | No. (Defaults to: `900000`) | `number` or `null` | The time interval in ms in which the bot updates its presence. If set to `null` the presence auto update will be disabled. |
-
-> **Note on `Required`**: A required settings HAS to be in the JSON or environment variables.
->
-> **Note on `Default`**: If a setting is missing from the JSON or environment variables, the default value takes place.
->
-> * To see how to find the IDs for users or channels, you can check out [this guide](<https://github.com/moonstar-x/discord-downtime-notifier/wiki/Getting-User,-Channel-and-Server-IDs>).
-> * If you don't have a Discord token yet, you can see a guide on how to get one [here](<https://github.com/moonstar-x/discord-downtime-notifier/wiki/Getting-a-Discord-Bot-Token>).
-
-### Using the Config File
-
-Inside the `config` folder you will see a file named `settings.json.example`, rename it to `settings.json` and replace all the properties with your own values.
-
-Your file should look like this:
-
-```json
-{
-  "token": "YOUR_DISCORD_TOKEN",
-  "prefix": "!",
-  "owner_id": "YOUR_USER_ID",
-  "owner_reporting": false,
-  "presence_refresh_interval": 900000
-}
-```
+For more information, please visit the [official documentation site](https://docs.moonstar-x.dev/discord-free-games-notifier).
 
 ## Usage
 
-You can start the bot by running:
+In order to use this project you'll need the following:
+
+* [Redis](https://redis.io)
+* [Doker](https://docker.com) (Recommended) or [Node.js](https://nodejs.org) (At least version 20)
+
+### With Docker (Recommended)
+
+Create a `docker-compose.yml` file with the following:
+
+```yaml
+services:
+  bot:
+    image: ghcr.io/moonstar-x/discord-free-games-notifier:latest
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      DISCORD_TOKEN: YOUR_DISCORD_TOKEN_HERE
+      DISCORD_SHARING_ENABLED: false
+      DISCORD_SHADING_COUNT: auto
+      DISCORD_PRESENCE_INTERVAL: 30000
+      REDIS_URI: redis://redis:6379
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DATABASE: free-games
+      POSTGRES_USER: discord
+      POSTGRES_PASSWORD: SOMETHING_SECRET
+  
+  crawler:
+    image: ghcr.io/moonstar-x/free-games-crawler:latest
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      REDIS_URI: redis://redis:6379
+
+  redis:
+    image: redis:7.4-rc2-alpine
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - ./redis:/data
+
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: free-games
+      POSTGRES_USER: discord
+      POSTGRES_PASSWORD: SOMETHING_SECRET
+```
+
+> You can also the image `moonstarx/discord-free-games-notifier:latest` and `moonstarx/free-games-crawler:latest` if you prefer DockerHub.
+> 
+> Make sure to replace `SOMETHING_SECRET` with a password for your database and `YOUR_DISCORD_TOKEN_HERE` with your bot's token.
+
+### With Node.js
+
+Make sure to have at least Node.js 20.
+
+First, clone this repository:
+
+```bash
+git clone https://github.com/moonstar-x/discord-free-games-notifier
+```
+
+Install the dependencies:
+
+```bash
+npm install
+```
+
+Build the project:
+
+```bash
+npm run build
+```
+
+Create an `.env` file and add your configuration:
 
 ```text
+DISCORD_TOKEN=YOUR_DISCORD_TOKEN_HERE
+DISCORD_SHARDING_ENABLED=false
+DISCORD_SHARDING_COUNT=2
+DISCORD_PRESENCE_INTERVAL=30000
+
+REDIS_URI=redis://localhost:6379
+
+POSTGRES_HOST=localhost
+POSTGRES_PORT=5432
+POSTGRES_DATABASE=dev
+POSTGRES_USER=dev
+POSTGRES_PASSWORD=password
+```
+
+And start the bot:
+
+```bash
 npm start
 ```
 
-You'll need to configure which channel should be used for the bot to send notifications. To do this, run the command:
+> This assumes you have a Redis and a Postgres instance running on `localhost`.
 
-```text
-n!setchannel <channel_mention>
+### Configuration
+
+You can configure the bot with the following environment variables.
+
+| Name                      | Required | Default | Description                                                                                                                                                                      |
+|---------------------------|----------|---------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| DISCORD_TOKEN             | Yes      |         | The token to connect your bot to Discord.                                                                                                                                        |
+| DISCORD_SHARDING_ENABLED  | No       | false   | Whether the bot should start in sharded mode or not. This is necessary if your bot is in more than 2000 servers.                                                                 |
+| DISCORD_SHARDING_COUNT    | No       | auto    | The amount of shards to spawn if sharding is enabled. It should be a number greater than 1. You can leave this as `auto` to use an automatic value generated for your own needs. |
+| DISCORD_PRESENCE_INTERVAL | No       | 30000   | The amount of milliseconds to wait before the bot changes its presence or activity.                                                                                              |
+| REDIS_URI                 | Yes      |         | The Redis URI shared with the crawler service.                                                                                                                                   |
+| POSTGRES_HOST             | Yes      |         | The database host to connect to.                                                                                                                                                 |
+| POSTGRES_PORT             | No       | 5432    | The port to use to connect to the database.                                                                                                                                      |
+| POSTGRES_DATABASE         | Yes      |         | The name of the database to connect to.                                                                                                                                          |
+| POSTGRES_USER             | Yes      |         | The username to connect to the database with.                                                                                                                                    |
+| POSTGRES_PASSWORD         | Yes      |         | The password to connect to the database with.                                                                                                                                    |
+
+### Commands
+
+Once you get the bot running you will have access to the following commands:
+
+| Command                | Notes                                          | Description                                                                                              |
+|------------------------|------------------------------------------------|----------------------------------------------------------------------------------------------------------|
+| /configure channel     | Guild only. Requires `ManageGuild` permission. | Set the channel to send the notifications to. Must be a text channel.                                    |
+| /configure language    | Guild only. Requires `ManageGuild` permission. | Set the language in which the notifications are sent. Currently supported: English, French, and Spanish. |
+| /configure storefronts | Guild only. Requires `ManageGuild` permission. | Enable or disable each storefront to be notified about.                                                  |
+| /help                  |                                                | Get a short help message regarding how to use the bot.                                                   |
+| /info                  | Guild only.                                    | Get a message with the information that the bot has stored for the server.                               |
+| /offers                |                                                | Get a list of all the currently available game offers.                                                   |
+
+## Development
+
+Clone this repository:
+
+```bash
+git clone https://github.com/moonstar-x/discord-free-games-notifier
 ```
 
-> Replace `n!` with your actual bot prefix and `<channel_mention>` with the mention of the channel you wish to set.
->
-> Make sure that the channel you're setting is viewable by the bot and that you have the `MANAGE_CHANNELS` permission.
+Install the dependencies:
 
-## Commands
-
-The following commands are available:
-
-| Command                          | Aliases     | Description                                                                                                                                                                                                           |
-|----------------------------------|-------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `n!help`                         | `n!h`       | Receive a message with the available commands.                                                                                                                                                                        |
-| `n!setchannel <channel_mention>` | `n!channel` | Set the channel that should be used for the bot to send the automatic game offer announcements. The user issuing this command must have the `MANAGE_CHANNELS` permission.                                             |
-| `n!disable`                      |             | Disable the automatic game offer announcements on this server. You can still use the `n!offers` command. The user issuing this command must have the `MANAGE_CHANNELS` permission.                                    |
-| `n!offers <provider>`            |             | Get a list of current available offers. Replace `<provider>` with **epic** for Epic Games Store offers or **steam** for Steam offers. You can omit this argument to receive all offers from all providers supported.  |
-
-## Docker Support
-
-You can use the bot through Docker.
-
-### Volumes
-
-You may use the following volumes:
-
-| Volume          | Description                                                                                                                  |
-|-----------------|------------------------------------------------------------------------------------------------------------------------------|
-| /opt/app/config | Volume where the config file is located. Generally not necessary since you can configure the bot with environment variables. |
-| /opt/app/data   | Volume where the data folder is located. Here you can find the sqlite database file. Required to set up.                     |
-
-### Environment Variables
-
-You can configure the bot using environment variables. To do so, check out [configuration](#configuration) for a full list of what environment variables are used.
-
-### Starting the Container
-
-Starting the bot's container can be done by running:
-
-```text
-docker run -it -e DISCORD_TOKEN="YOUR DISCORD TOKEN" -v "/local/folder/for/data":"/opt/app/data" moonstarx/discord-free-games-notifier:latest
+```bash
+npm install
 ```
 
-## Add this bot to your server
+Create the development environment:
 
-You can add this bot to your server by clicking in the image below:
+```bash
+cd _dev && docker compose up
+```
 
-[![Add this bot to your server](https://i.imgur.com/SVAwPTU.png)](https://discord.com/oauth2/authorize?client_id=795561965954269205&scope=bot&permissions=2048)
+And run the bot locally:
 
-> The prefix for this bot is `n!`
+```bash
+npm run dev
+```
 
-## Author
+## Testing
 
-This bot was made by [moonstar-x](https://github.com/moonstar-x).
+You can run unit tests by using:
+
+```bash
+npm run test
+```
+
+Or, if you wish to have test watch enabled:
+
+```bash
+npm run test:watch
+```
+
+## Building
+
+### Docker
+
+To build this project you should use [Docker](https://docker.com).
+
+To build the image locally, you can run:
+
+```bash
+docker build -t test/discord-free-games-notifier .  
+```
+
+### Node.js
+
+To build this project with Node.js, run the following command:
+
+```bash
+npm run build
+```

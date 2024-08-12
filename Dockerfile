@@ -1,22 +1,36 @@
-FROM node:12.20.0-alpine3.12
+# Base alias to use across stages.
+FROM node:20.12.2-alpine AS base
 
-ARG DATE_CREATED
-ARG VERSION
+# Dependency stage.
+FROM base AS deps
 
-LABEL org.opencontainers.image.created=$DATE_CREATED
-LABEL org.opencontainers.image.version=$VERSION
-LABEL org.opencontainers.image.authors="moonstar-x"
-LABEL org.opencontainers.image.vendor="moonstar-x"
-LABEL org.opencontainers.image.title="Discord Free Games Notifier"
-LABEL org.opencontainers.image.description="A Discord bot that will notify when free games on Steam or Epic Games come out."
-LABEL org.opencontainers.image.source="https://github.com/moonstar-x/discord-free-games-notifier"
-
-WORKDIR /opt/app
+WORKDIR /tmp/app
 
 COPY package*.json ./
 
-RUN npm ci --only=prod
+RUN npm ci
 
+# Build stage.
+FROM base AS build
+
+WORKDIR /tmp/app
+
+COPY --from=deps /tmp/app/node_modules ./node_modules
 COPY . .
+
+RUN npm run build
+
+# Production image.
+FROM base AS runner
+
+WORKDIR /opt/app
+ENV NODE_END=production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nodejs
+
+COPY --from=build --chown=nodejs:nodejs /tmp/app .
+
+USER nodejs
 
 CMD ["npm", "start"]

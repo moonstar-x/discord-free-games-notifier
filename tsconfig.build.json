@@ -1,0 +1,12 @@
+{
+  "include": ["src/**/*"],
+  "exclude": [
+    "build",
+    "node_modules",
+    "src/**/*.spec.*",
+    "__mocks__",
+    "src/**/*/__mocks__"
+  ],
+
+  "extends": "./tsconfig.base.json"
+}

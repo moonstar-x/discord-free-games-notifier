@@ -1,0 +1,85 @@
+name: Build Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      ghcr_image_name:
+        required: true
+        type: string
+      image_name:
+        required: true
+        type: string
+      image_tag:
+        required: true
+        type: string
+      ghcr_username:
+        rquired: true
+        type: string
+      dockerhub_username:
+        required: true
+        type: string
+    secrets:
+      ghcr_token:
+        required: true
+      dockerhub_token:
+        required: true
+
+jobs:
+  build:
+    name: Build Docker Image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Cache Docker Layers
+        uses: actions/cache@v4
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ inputs.ghcr_username }}
+          password: ${{ secrets.ghcr_token }}
+
+      - name: Login to DockerHub Registry
+        uses: docker/login-action@v3
+        with:
+          username: ${{ inputs.dockerhub_username }}
+          password: ${{ secrets.dockerhub_token }}
+
+      - name: Get Version from package.json
+        id: package-version
+        uses: martinbeentjes/npm-get-version-action@master
+
+      - name: Build & Push Docker Image
+        id: docker_build
+        uses: docker/build-push-action@v3
+        env:
+          GHCR_IMAGE: ghcr.io/${{ inputs.ghcr_image_name }}
+          DOCKERHUB_IMAGE: ${{ inputs.dockerhub_username }}/${{ inputs.image_name }}
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.GHCR_IMAGE }}:${{ inputs.image_tag }}
+            ${{ env.GHCR_IMAGE }}:${{ steps.package-version.outputs.current-version }}
+            ${{ env.DOCKERHUB_IMAGE }}:${{ inputs.image_tag }}
+            ${{ env.DOCKERHUB_IMAGE }}:${{ steps.package-version.outputs.current-version }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
+          platforms: linux/amd64,linux/arm64/v8
+
+      - name: Image Digest
+        run: echo ${{ steps.docker_build.outputs.digest }}

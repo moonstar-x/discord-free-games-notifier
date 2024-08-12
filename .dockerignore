@@ -1,35 +1,11 @@
-# OS Generated
-.DS_Store
-.DS_Store?
-._*
-.Spotlight-V100
-.Thrashes
-ehthumbs.db
-Thumbs.db
+# Ignore everything by default.
+*
 
-# IDE
-.vscode/
-.idea/
-
-# Node
-node_modules
-npm-debug.log
-
-# Development
-config/settings.json
-data
-dev-data
-
-# Tests
-__mocks__
-test
-
-# Git
-.github
-.git
-
-# Root files
-.eslintignore
-.eslintrc
-.gitignore
-jest.config.js
+# Allow the public project files.
+!migrations
+!src
+!Dockerfile
+!LICENSE
+!package*.json
+!README.md
+!tsconfig*.json

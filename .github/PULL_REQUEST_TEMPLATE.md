@@ -5,6 +5,7 @@ Make sure that your PR fulfills these requirements:
 - [ ] Tests have been added for this feature.
 - [ ] All tests pass on your local machine.
 - [ ] Code has been linted with the proper rules.
+- [ ] Project builds on your local machine.
 
 ### :page_facing_up: Description
 
