@@ -1,0 +1,43 @@
+services:
+  bot:
+    image: ghcr.io/moonstar-x/discord-free-games-notifier:latest
+    restart: unless-stopped
+    depends_on:
+      - redis
+      - postgres
+    environment:
+      DISCORD_TOKEN: YOUR_DISCORD_TOKEN_HERE
+      DISCORD_SHARING_ENABLED: false
+      DISCORD_SHADING_COUNT: auto
+      DISCORD_PRESENCE_INTERVAL: 30000
+      REDIS_URI: redis://redis:6379
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_DATABASE: free-games
+      POSTGRES_USER: discord
+      POSTGRES_PASSWORD: SOMETHING_SECRET
+
+  crawler:
+    image: ghcr.io/moonstar-x/free-games-crawler:latest
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      REDIS_URI: redis://redis:6379
+
+  redis:
+    image: redis:7.4-rc2-alpine
+    restart: unless-stopped
+    command: redis-server --save 60 1 --loglevel warning
+    volumes:
+      - ./redis:/data
+
+  postgres:
+    image: postgres:15-alpine
+    restart: unless-stopped
+    volumes:
+      - ./postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: free-games
+      POSTGRES_USER: discord
+      POSTGRES_PASSWORD: SOMETHING_SECRET
