@@ -1,0 +1,11 @@
+# Ignore everything by default.
+*
+
+# Allow the public project files.
+!migrations
+!src
+!Dockerfile
+!LICENSE
+!package*.json
+!README.md
+!tsconfig*.json
