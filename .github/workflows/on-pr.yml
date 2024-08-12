@@ -1,0 +1,14 @@
+name: On Pull Request
+
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+      - reopened
+
+jobs:
+  test:
+    name: Run Tests
+    uses: ./.github/workflows/callable-test.yml

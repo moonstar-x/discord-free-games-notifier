@@ -1,0 +1,26 @@
+name: On Push (Main)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Tests
+    uses: ./.github/workflows/callable-test.yml
+
+  build:
+    name: Build Docker Image
+    uses: ./.github/workflows/callable-build.yml
+    needs:
+      - test
+    with:
+      ghcr_image_name: ${{ github.repository }}
+      image_name: discord-free-games-notifier
+      image_tag: latest
+      ghcr_username: ${{ github.actor }}
+      dockerhub_username: moonstarx
+    secrets:
+      ghcr_token: ${{ secrets.GITHUB_TOKEN }}
+      dockerhub_token: ${{ secrets.DOCKERHUB_TOKEN }}
