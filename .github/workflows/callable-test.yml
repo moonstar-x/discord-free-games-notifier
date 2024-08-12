@@ -31,3 +31,5 @@ jobs:
 
       - name: Run Tests
         run: npm run test
+        env:
+          TZ: America/Guayaquil
