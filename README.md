@@ -67,6 +67,18 @@ services:
 > 
 > Make sure to replace `SOMETHING_SECRET` with a password for your database and `YOUR_DISCORD_TOKEN_HERE` with your bot's token.
 
+And start it up:
+
+```bash
+docker compose up -d
+```
+
+Once you have it, you should deploy the commands. To do this, run:
+
+```bash
+docker compose run bot npm run deploy:prod
+```
+
 ### With Node.js
 
 Make sure to have at least Node.js 20.
@@ -106,6 +118,12 @@ POSTGRES_USER=dev
 POSTGRES_PASSWORD=password
 ```
 
+Deploy the commands:
+
+```bash
+npm run deploy:prod
+```
+
 And start the bot:
 
 ```bash
@@ -123,7 +141,7 @@ You can configure the bot with the following environment variables.
 | DISCORD_TOKEN             | Yes      |         | The token to connect your bot to Discord.                                                                                                                                        |
 | DISCORD_SHARDING_ENABLED  | No       | false   | Whether the bot should start in sharded mode or not. This is necessary if your bot is in more than 2000 servers.                                                                 |
 | DISCORD_SHARDING_COUNT    | No       | auto    | The amount of shards to spawn if sharding is enabled. It should be a number greater than 1. You can leave this as `auto` to use an automatic value generated for your own needs. |
-| DISCORD_PRESENCE_INTERVAL | No       | 30000   | The amount of milliseconds to wait before the bot changes its presence or activity.                                                                                              |
+| DISCORD_PRESENCE_INTERVAL | No       | 300000  | The amount of milliseconds to wait before the bot changes its presence or activity.                                                                                              |
 | REDIS_URI                 | Yes      |         | The Redis URI shared with the crawler service.                                                                                                                                   |
 | POSTGRES_HOST             | Yes      |         | The database host to connect to.                                                                                                                                                 |
 | POSTGRES_PORT             | No       | 5432    | The port to use to connect to the database.                                                                                                                                      |

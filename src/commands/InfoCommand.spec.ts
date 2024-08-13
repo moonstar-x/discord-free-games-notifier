@@ -53,16 +53,22 @@ describe('Commands > InfoCommand', () => {
   describe('run()', () => {
     const command = new InfoCommand(client);
     const interaction = {
-      reply: jest.fn(),
+      deferReply: jest.fn(),
+      editReply: jest.fn(),
       locale: 'en-US',
       guildId: '1267881983548063785'
     } as unknown as GuildChatInputCommandInteraction;
+
+    it('should defer the reply.', async () => {
+      await command.run(interaction);
+      expect(interaction.deferReply).toHaveBeenCalled();
+    });
 
     it('should reply with configure message if no settings are found.', async () => {
       (getGuild as jest.Mock).mockResolvedValueOnce(null);
       await command.run(interaction);
 
-      expect(interaction.reply).toHaveBeenCalledWith({ content: 'No settings have been found for this server. Please use **/configure channel** command to set up the subscription channel.' });
+      expect(interaction.editReply).toHaveBeenCalledWith({ content: 'No settings have been found for this server. Please use **/configure channel** command to set up the subscription channel.' });
     });
 
     it('should reply with the correct embed if channel exists.', async () => {
@@ -85,7 +91,7 @@ describe('Commands > InfoCommand', () => {
           })
       ];
 
-      expect(interaction.reply).toHaveBeenCalledWith({ embeds: expectedEmbeds });
+      expect(interaction.editReply).toHaveBeenCalledWith({ embeds: expectedEmbeds });
     });
 
     it('should reply with the correct embed if no channel is set.', async () => {
@@ -122,7 +128,7 @@ describe('Commands > InfoCommand', () => {
           })
       ];
 
-      expect(interaction.reply).toHaveBeenCalledWith({ embeds: expectedEmbeds });
+      expect(interaction.editReply).toHaveBeenCalledWith({ embeds: expectedEmbeds });
     });
 
     it('should reply with the correct embed if channel set does not exist.', async () => {
@@ -146,7 +152,7 @@ describe('Commands > InfoCommand', () => {
           })
       ];
 
-      expect(interaction.reply).toHaveBeenCalledWith({ embeds: expectedEmbeds });
+      expect(interaction.editReply).toHaveBeenCalledWith({ embeds: expectedEmbeds });
     });
   });
 });

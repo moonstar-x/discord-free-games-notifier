@@ -5,11 +5,13 @@ import timezone from 'dayjs/plugin/timezone';
 import humanizeDuration from 'humanize-duration';
 import { Collection, Guild, Snowflake } from 'discord.js';
 import { randomItem } from '../../utils/array';
+import { getStorefronts } from '../../features/gameOffers/functions/getStorefronts';
+import { getCurrentGameOffers } from '../../features/gameOffers/functions/getCurrentGameOffers';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
-const PRESENCE_NAMES = ['n_guilds', 'n_members', 'n_commands', 'time_cur', 'time_ready', 'uptime'] as const;
+const PRESENCE_NAMES = ['n_guilds', 'n_members', 'n_commands', 'n_storefronts', 'n_offers', 'time_cur', 'time_ready', 'uptime'] as const;
 type PresenceName = typeof PRESENCE_NAMES[number];
 
 export class PresenceResolver {
@@ -29,6 +31,10 @@ export class PresenceResolver {
         return `with ${value} users!`;
       case 'n_commands':
         return `with ${value} commands!`;
+      case 'n_storefronts':
+        return `on ${value} storefronts!`;
+      case 'n_offers':
+        return `with ${value} offers!`;
       case 'time_cur':
         return `Current time: ${value}`;
       case 'time_ready':
@@ -52,6 +58,10 @@ export class PresenceResolver {
         return this.getNumberOfMembers();
       case 'n_commands':
         return this.getNumberOfCommands();
+      case 'n_storefronts':
+        return this.getNumberOfStorefronts();
+      case 'n_offers':
+        return this.getNumberOfOffers();
       case 'time_cur':
         return this.getCurrentTime();
       case 'time_ready':
@@ -86,6 +96,16 @@ export class PresenceResolver {
 
   private async getNumberOfCommands(): Promise<string> {
     return this.client.registry.size().toString();
+  }
+
+  private async getNumberOfStorefronts(): Promise<string> {
+    const storefronts = await getStorefronts();
+    return storefronts.length.toString();
+  }
+
+  private async getNumberOfOffers(): Promise<string> {
+    const offers = await getCurrentGameOffers();
+    return offers.length.toString();
   }
 
   private async getCurrentTime(): Promise<string> {

@@ -1,6 +1,6 @@
 {
   "name": "discord-free-games-notifier",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "A Discord bot that will notify you when games on various storefronts become free.",
   "private": true,
   "scripts": {

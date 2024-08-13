@@ -6,6 +6,18 @@ import dayjs from 'dayjs';
 dayjs.tz.setDefault('America/Guayaquil');
 const dateGetTimeSpy = jest.spyOn(Date.prototype, 'getTime', undefined as never);
 
+jest.mock('../../features/gameOffers/functions/getStorefronts', () => {
+  return {
+    getStorefronts: jest.fn().mockResolvedValue([1, 2])
+  };
+});
+
+jest.mock('../../features/gameOffers/functions/getCurrentGameOffers', () => {
+  return {
+    getCurrentGameOffers: jest.fn().mockResolvedValue([1, 2])
+  };
+});
+
 describe('Base > Presence > PresenceResolver', () => {
   beforeAll(() => {
     (dateGetTimeSpy as jest.Mock).mockReturnValue(1723224679000);
@@ -85,10 +97,17 @@ describe('Base > Presence > PresenceResolver', () => {
         });
       });
 
-      describe('n_commands', () => {
-        it('should return the number of commands.', async () => {
-          const result = await resolver.get('n_commands');
-          expect(result).toBe('with 5 commands!');
+      describe('n_storefronts', () => {
+        it('should return the number of storefronts.', async () => {
+          const result = await resolver.get('n_storefronts');
+          expect(result).toBe('on 2 storefronts!');
+        });
+      });
+
+      describe('n_offers', () => {
+        it('should return the number of storefronts.', async () => {
+          const result = await resolver.get('n_offers');
+          expect(result).toBe('with 2 offers!');
         });
       });
 
