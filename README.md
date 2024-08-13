@@ -67,6 +67,18 @@ services:
 > 
 > Make sure to replace `SOMETHING_SECRET` with a password for your database and `YOUR_DISCORD_TOKEN_HERE` with your bot's token.
 
+And start it up:
+
+```bash
+docker compose up -d
+```
+
+Once you have it, you should deploy the commands. To do this, run:
+
+```bash
+docker compose run bot npm run deploy:prod
+```
+
 ### With Node.js
 
 Make sure to have at least Node.js 20.
@@ -104,6 +116,12 @@ POSTGRES_PORT=5432
 POSTGRES_DATABASE=dev
 POSTGRES_USER=dev
 POSTGRES_PASSWORD=password
+```
+
+Deploy the commands:
+
+```bash
+npm run deploy:prod
 ```
 
 And start the bot:
