@@ -17,6 +17,7 @@ export default class HelpCommand extends Command {
   }
 
   public override async run(interaction: ChatInputCommandInteraction): Promise<void> {
+    await interaction.deferReply();
     const t = getInteractionTranslator(interaction);
 
     const embed = new EmbedBuilder()
@@ -39,6 +40,6 @@ export default class HelpCommand extends Command {
         new ButtonBuilder().setEmoji('🌎').setStyle(ButtonStyle.Link).setURL(BOT_WEBSITE_URL).setLabel(t('commands.help.run.buttons.bot_website.label')),
       );
 
-    await interaction.reply({ embeds: [embed], components: [row1, row2] });
+    await interaction.editReply({ embeds: [embed], components: [row1, row2] });
   }
 }
