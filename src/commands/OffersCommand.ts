@@ -19,16 +19,17 @@ export default class OffersCommand extends Command {
   }
 
   public override async run(interaction: ChatInputCommandInteraction): Promise<void> {
+    await interaction.deferReply();
     const t = getInteractionTranslator(interaction);
     const offers = await getCurrentGameOffers();
 
     if (!offers.length) {
       const storefronts = await getStorefronts();
-      await interaction.reply({ content: t('commands.offers.run.empty.text', { list: storefronts.join(', ') }) });
+      await interaction.editReply({ content: t('commands.offers.run.empty.text', { list: storefronts.join(', ') }) });
       return;
     }
 
-    await interaction.reply({ content: t('commands.offers.run.start.text') });
+    await interaction.editReply({ content: t('commands.offers.run.start.text') });
 
     for (const offer of offers) {
       const { embed, component } = offerToMessage(offer, t);
