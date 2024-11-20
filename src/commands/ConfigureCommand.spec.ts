@@ -87,7 +87,10 @@ describe('Commands > ConfigureCommand', () => {
         update: jest.fn().mockImplementation(() => Promise.resolve())
       };
       const followUpResponseMock = {
-        awaitMessageComponent: jest.fn().mockResolvedValue(userResponseMock)
+        awaitMessageComponent: jest.fn().mockImplementation(({ filter }) => {
+          filter({ user: { id: 1 }, customId: 'configure-storefronts-enable' });
+          return userResponseMock;
+        })
       };
       const interaction = {
         reply: jest.fn(),
@@ -96,6 +99,9 @@ describe('Commands > ConfigureCommand', () => {
         guildId: '1267881983548063785',
         options: {
           getSubcommand: jest.fn().mockReturnValue('storefronts')
+        },
+        user: {
+          id: 1
         }
       } as unknown as GuildChatInputCommandInteraction;
 

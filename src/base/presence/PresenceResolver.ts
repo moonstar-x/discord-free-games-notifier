@@ -69,7 +69,7 @@ export class PresenceResolver {
       case 'uptime':
         return this.getUptime();
       default:
-        throw new Error('Invalid presence name provided.');
+        return Promise.resolve('');
     }
   }
 

@@ -166,6 +166,17 @@ describe('Features > GameOffers > Classes > OffersNotifier', () => {
         guild.shardId = 0;
       });
 
+      it('should send the message if client is not sharded.', async () => {
+        const oldShard = client.shard;
+        client.shard = null;
+
+        await triggerRef.trigger!();
+
+        expect(channel.send).toHaveBeenCalled();
+
+        client.shard = oldShard;
+      });
+
       it('should not send the message if channel is null.', async () => {
         (guild.channels.fetch as jest.Mock).mockResolvedValueOnce(null);
         await triggerRef.trigger!();
