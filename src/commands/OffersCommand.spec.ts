@@ -44,27 +44,21 @@ describe('Commands > OffersCommand', () => {
   describe('run()', () => {
     const command = new OffersCommand(client);
     const interaction = {
-      deferReply: jest.fn(),
-      editReply: jest.fn(),
+      reply: jest.fn(),
       followUp: jest.fn(),
       locale: 'en-US'
     } as unknown as ChatInputCommandInteraction;
-
-    it('should defer the reply.', async () => {
-      await command.run(interaction);
-      expect(interaction.deferReply).toHaveBeenCalled();
-    });
 
     it('should reply with the empty message if no offers are available.', async () => {
       (getCurrentGameOffers as jest.Mock).mockResolvedValueOnce([]);
       await command.run(interaction);
 
-      expect(interaction.editReply).toHaveBeenCalledWith({ content: 'There are currently no offers in any of the following storefronts: Steam, EpicGames.' });
+      expect(interaction.reply).toHaveBeenCalledWith({ content: 'There are currently no offers in any of the following storefronts: Steam, EpicGames.' });
     });
 
     it('should reply with start message.', async () => {
       await command.run(interaction);
-      expect(interaction.editReply).toHaveBeenCalledWith({ content: "Here's a list of the currently available offers." });
+      expect(interaction.reply).toHaveBeenCalledWith({ content: "Here's a list of the currently available offers." });
     });
 
     it('should send an embed and component for each game.', async () => {
