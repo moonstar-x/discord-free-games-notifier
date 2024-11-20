@@ -68,8 +68,6 @@ export default class ConfigureCommand extends Command {
   }
 
   public override async run(interaction: GuildChatInputCommandInteraction): Promise<void> {
-    await interaction.deferReply();
-
     const subCommand = interaction.options.getSubcommand();
 
     switch (subCommand) {
@@ -89,12 +87,12 @@ export default class ConfigureCommand extends Command {
     const channel = interaction.options.getChannel('channel');
 
     if (!channel) {
-      await interaction.editReply({ content: t('commands.configure.run.channel.pre_check.text') });
+      await interaction.reply({ content: t('commands.configure.run.channel.pre_check.text') });
       return;
     }
 
     await updateOrCreateGuildChannel(interaction.guildId, channel.id);
-    await interaction.editReply({ content: t('commands.configure.run.channel.success.text', { channel: channel.toString() }) });
+    await interaction.reply({ content: t('commands.configure.run.channel.success.text', { channel: channel.toString() }) });
   }
 
   private async runStorefronts(interaction: GuildChatInputCommandInteraction): Promise<void> {
@@ -102,11 +100,11 @@ export default class ConfigureCommand extends Command {
     const storefronts = await getStorefronts();
 
     if (!storefronts.length) {
-      await interaction.editReply({ content: t('commands.configure.run.storefronts.empty.text') });
+      await interaction.reply({ content: t('commands.configure.run.storefronts.empty.text') });
       return;
     }
 
-    await interaction.editReply({ content: t('commands.configure.run.storefronts.start.text') });
+    await interaction.reply({ content: t('commands.configure.run.storefronts.start.text') });
 
     const buttonIds = {
       enable: 'configure-storefronts-enable',
@@ -153,19 +151,19 @@ export default class ConfigureCommand extends Command {
     const locale = interaction.options.getString('language') as Locale | null;
 
     if (!locale) {
-      await interaction.editReply({ content: t('commands.configure.run.language.pre_check.text') });
+      await interaction.reply({ content: t('commands.configure.run.language.pre_check.text') });
       return;
     }
 
     const language = t(AVAILABLE_LOCALES[locale]);
     await updateOrCreateGuildLocale(interaction.guildId, locale);
 
-    await interaction.editReply({ content: t('commands.configure.run.language.success.text', { language }) });
+    await interaction.reply({ content: t('commands.configure.run.language.success.text', { language }) });
   }
 
   private async runDefault(interaction: ChatInputCommandInteraction): Promise<void> {
     const t = getInteractionTranslator(interaction);
 
-    await interaction.editReply({ content: t('commands.configure.run.default.response.text') });
+    await interaction.reply({ content: t('commands.configure.run.default.response.text') });
   }
 }

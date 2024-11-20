@@ -54,8 +54,7 @@ describe('Commands > ConfigureCommand', () => {
 
     describe('runChannel()', () => {
       const interaction = {
-        deferReply: jest.fn(),
-        editReply: jest.fn(),
+        reply: jest.fn(),
         locale: 'en-US',
         guildId: '1267881983548063785',
         options: {
@@ -64,16 +63,11 @@ describe('Commands > ConfigureCommand', () => {
         }
       } as unknown as GuildChatInputCommandInteraction;
 
-      it('should defer the reply.', async () => {
-        await command.run(interaction);
-        expect(interaction.deferReply).toHaveBeenCalled();
-      });
-
       it('should reply with pre check message if no channel is provided.', async () => {
         (interaction.options.getChannel as jest.Mock).mockReturnValueOnce(null);
         await command.run(interaction);
 
-        expect(interaction.editReply).toHaveBeenCalledWith({ content: 'No channel provided.' });
+        expect(interaction.reply).toHaveBeenCalledWith({ content: 'No channel provided.' });
       });
 
       it('should update guild channel.', async () => {
@@ -83,7 +77,7 @@ describe('Commands > ConfigureCommand', () => {
 
       it('should reply with channel update message.', async () => {
         await command.run(interaction);
-        expect(interaction.editReply).toHaveBeenCalledWith({ content: 'Successfully updated notifications channel to Channel.' });
+        expect(interaction.reply).toHaveBeenCalledWith({ content: 'Successfully updated notifications channel to Channel.' });
       });
     });
 
@@ -96,8 +90,7 @@ describe('Commands > ConfigureCommand', () => {
         awaitMessageComponent: jest.fn().mockResolvedValue(userResponseMock)
       };
       const interaction = {
-        deferReply: jest.fn(),
-        editReply: jest.fn(),
+        reply: jest.fn(),
         followUp: jest.fn().mockResolvedValue(followUpResponseMock),
         locale: 'en-US',
         guildId: '1267881983548063785',
@@ -106,21 +99,16 @@ describe('Commands > ConfigureCommand', () => {
         }
       } as unknown as GuildChatInputCommandInteraction;
 
-      it('should defer the reply.', async () => {
-        await command.run(interaction);
-        expect(interaction.deferReply).toHaveBeenCalled();
-      });
-
       it('should reply with empty storefronts message if no storefronts exist.', async () => {
         (getStorefronts as jest.Mock).mockResolvedValueOnce([]);
         await command.run(interaction);
 
-        expect(interaction.editReply).toHaveBeenCalledWith({ content: 'No storefronts are available right now.' });
+        expect(interaction.reply).toHaveBeenCalledWith({ content: 'No storefronts are available right now.' });
       });
 
       it('should reply with start message.', async () => {
         await command.run(interaction);
-        expect(interaction.editReply).toHaveBeenCalledWith({ content: 'You will receive a follow up for each storefront available. Please, click on the buttons as they appear to enable or disable notifications for each storefront.' });
+        expect(interaction.reply).toHaveBeenCalledWith({ content: 'You will receive a follow up for each storefront available. Please, click on the buttons as they appear to enable or disable notifications for each storefront.' });
       });
 
       it('should send follow up with correct components for each storefront.', async () => {
@@ -181,8 +169,7 @@ describe('Commands > ConfigureCommand', () => {
 
     describe('runLanguage()', () => {
       const interaction = {
-        deferReply: jest.fn(),
-        editReply: jest.fn(),
+        reply: jest.fn(),
         locale: 'en-US',
         guildId: '1267881983548063785',
         options: {
@@ -191,16 +178,11 @@ describe('Commands > ConfigureCommand', () => {
         }
       } as unknown as GuildChatInputCommandInteraction;
 
-      it('should defer the reply.', async () => {
-        await command.run(interaction);
-        expect(interaction.deferReply).toHaveBeenCalled();
-      });
-
       it('should reply with pre check message if no locale is provided.', async () => {
         (interaction.options.getString as jest.Mock).mockReturnValueOnce(null);
         await command.run(interaction);
 
-        expect(interaction.editReply).toHaveBeenCalledWith({ content: 'No language provided.' });
+        expect(interaction.reply).toHaveBeenCalledWith({ content: 'No language provided.' });
       });
 
       it('should update guild locale.', async () => {
@@ -210,14 +192,13 @@ describe('Commands > ConfigureCommand', () => {
 
       it('should reply with language update message.', async () => {
         await command.run(interaction);
-        expect(interaction.editReply).toHaveBeenCalledWith({ content: 'Successfully updated notifications language to **English**.' });
+        expect(interaction.reply).toHaveBeenCalledWith({ content: 'Successfully updated notifications language to **English**.' });
       });
     });
 
     describe('runDefault()', () => {
       const interaction = {
-        deferReply: jest.fn(),
-        editReply: jest.fn(),
+        reply: jest.fn(),
         locale: 'en-US',
         guildId: '1267881983548063785',
         options: {
@@ -225,14 +206,9 @@ describe('Commands > ConfigureCommand', () => {
         }
       } as unknown as GuildChatInputCommandInteraction;
 
-      it('should defer the reply.', async () => {
-        await command.run(interaction);
-        expect(interaction.deferReply).toHaveBeenCalled();
-      });
-
       it('should reply with unknown subcommand message.', async () => {
         await command.run(interaction);
-        expect(interaction.editReply).toHaveBeenCalledWith({ content: 'Unknown subcommand received.' });
+        expect(interaction.reply).toHaveBeenCalledWith({ content: 'Unknown subcommand received.' });
       });
     });
   });
