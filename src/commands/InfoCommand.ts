@@ -20,12 +20,11 @@ export default class InfoCommand extends Command {
   }
 
   public override async run(interaction: GuildChatInputCommandInteraction): Promise<void> {
-    await interaction.deferReply();
     const t = getInteractionTranslator(interaction);
     const guildInfo = await getGuild(interaction.guildId);
 
     if (!guildInfo) {
-      await interaction.editReply({ content: t('commands.info.run.pre_check.text') });
+      await interaction.reply({ content: t('commands.info.run.pre_check.text') });
       return;
     }
 
@@ -52,7 +51,7 @@ export default class InfoCommand extends Command {
         text: t('commands.info.run.embed.footer', { createdAt, updatedAt })
       });
 
-    await interaction.editReply({ embeds: [embed] });
+    await interaction.reply({ embeds: [embed] });
   }
 
   private async getChannel(channelId: string | null): Promise<Channel | null> {

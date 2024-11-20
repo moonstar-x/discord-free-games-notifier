@@ -42,5 +42,12 @@ describe('Features > GameOffers > Functions > GetCurrentGameOffers', () => {
       const result = await getCurrentGameOffers();
       expect(result).toStrictEqual([gameOffer]);
     });
+
+    it('should return empty array if no offers exist.', async () => {
+      (client.keys as jest.Mock).mockResolvedValueOnce([]);
+
+      const result = await getCurrentGameOffers();
+      expect(result).toStrictEqual([]);
+    });
   });
 });

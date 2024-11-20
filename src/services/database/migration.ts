@@ -58,10 +58,6 @@ export const runMigrations = async (migrationsDirectory: string): Promise<Migrat
   await initializeMigrationTable();
   const newMigrations = await getNewMigrations(migrations);
 
-  if (!newMigrations.length) {
-    return [];
-  }
-
   return applyMigrations(migrationsDirectory, newMigrations);
 };
 

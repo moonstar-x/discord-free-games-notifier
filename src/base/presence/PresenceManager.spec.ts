@@ -95,6 +95,19 @@ describe('Base > Presence > PresenceManager', () => {
         expect(clearIntervalSpy).toHaveBeenCalledWith(oldHandle);
         expect((manager as unknown as { intervalHandle: number }).intervalHandle).not.toBe(oldHandle);
       });
+
+      it('should call manager.update on an interval.', async () => {
+        jest.useFakeTimers();
+        const updateSpy = jest.spyOn(manager, 'update');
+        updateSpy.mockImplementation(() => Promise.resolve());
+
+        await manager.setRefreshInterval(1000);
+        jest.advanceTimersByTime(3000);
+
+        expect(manager.update).toHaveBeenCalled();
+        jest.clearAllTimers();
+        jest.useRealTimers();
+      });
     });
 
     describe('setPresence()', () => {
@@ -115,6 +128,16 @@ describe('Base > Presence > PresenceManager', () => {
       it('should log presence change.', () => {
         manager.setPresence('something');
         expect(logger.info).toHaveBeenCalledWith('Presence changed to: something');
+      });
+
+      it('should log presence change even if no user exists.', () => {
+        const oldUser = client.user;
+        client.user = null;
+
+        manager.setPresence('something');
+        expect(logger.info).toHaveBeenCalledWith('Presence changed to: something');
+
+        client.user = oldUser;
       });
 
       it('should log error if presence change fails.', () => {

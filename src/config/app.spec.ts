@@ -63,6 +63,13 @@ describe('Config > App', () => {
     expect(config.DISCORD_SHARDING_COUNT).toBe('auto');
   });
 
+  it('should export valid DISCORD_SHARDING_COUNT if set to auto.', () => {
+    process.env = { ...mockedEnv, DISCORD_SHARDING_COUNT: 'auto' };
+    resetModule();
+
+    expect(config.DISCORD_SHARDING_COUNT).toBe('auto');
+  });
+
   it('should export valid REDIS_URI.', () => {
     expect(config.REDIS_URI).toBe('redis://localhost:6379');
   });

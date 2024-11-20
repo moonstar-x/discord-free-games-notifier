@@ -28,14 +28,14 @@ export const MESSAGE_KEY_TO_LOCALE: Partial<Record<MessageKey, Locale>> = {
 };
 const castLocaleStrings = localeStrings as LocaleMessageMap;
 
-const getMessage = (locale: Locale, key: MessageKey, useDefault: boolean = true): IntlMessageFormat => {
+const getMessage = (locale: Locale, key: MessageKey, useDefault: boolean): IntlMessageFormat => {
   const messagesForLocale = castLocaleStrings[locale];
   if (!messagesForLocale) {
     throw new TranslatorError(`No messages for locale ${locale} exist.`);
   }
 
   const message = messagesForLocale[key];
-  const defaultMessage = castLocaleStrings[DEFAULT_LOCALE]?.[key];
+  const defaultMessage = castLocaleStrings[DEFAULT_LOCALE]![key]; // Note: We can safely null-assert here because DEFAULT_LOCALE is a key of localStrings.
   const messageToReturn = useDefault ? message ?? defaultMessage : message;
 
   if (!messageToReturn) {
