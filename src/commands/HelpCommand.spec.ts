@@ -24,15 +24,9 @@ describe('Commands > HelpCommand', () => {
   describe('run()', () => {
     const command = new HelpCommand(client);
     const interaction = {
-      deferReply: jest.fn(),
-      editReply: jest.fn(),
+      reply: jest.fn(),
       locale: 'en-US'
     } as unknown as ChatInputCommandInteraction;
-
-    it('should defer the reply.', async () => {
-      await command.run(interaction);
-      expect(interaction.deferReply).toHaveBeenCalled();
-    });
 
     it('should reply with the embed.', async () => {
       await command.run(interaction);
@@ -60,7 +54,7 @@ describe('Commands > HelpCommand', () => {
           )
       ];
 
-      expect(interaction.editReply).toHaveBeenCalledWith({ embeds: expectedEmbeds, components: expectedComponents });
+      expect(interaction.reply).toHaveBeenCalledWith({ embeds: expectedEmbeds, components: expectedComponents });
     });
   });
 });
